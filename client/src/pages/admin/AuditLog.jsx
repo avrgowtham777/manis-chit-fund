@@ -41,14 +41,17 @@ export default function AuditLog() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-navy">Activity & Audit Log</h2>
-          <p className="text-gray-500 font-medium">Permanent tamper-evident audit history of all modifications</p>
+          <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight flex items-center gap-3">
+            <span>Activity & Audit Log</span>
+            <span className="text-gold text-2xl">📜</span>
+          </h2>
+          <p className="text-slate-300 font-medium mt-1">Permanent tamper-evident audit history of all ledger modifications</p>
         </div>
         <div>
           <select
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
-            className="px-4 py-3 border-2 border-slate-300 rounded-xl text-base font-bold text-slate-900 focus:ring-2 focus:ring-navy focus:border-navy bg-white shadow-sm"
+            className="w-full sm:w-auto px-4 py-3.5 border-2 border-gold/40 rounded-2xl text-base font-bold text-slate-900 bg-white shadow-lg focus:ring-2 focus:ring-gold"
           >
             <option value="">All Actions</option>
             <option value="record_payment">Payments Recorded</option>
@@ -64,50 +67,50 @@ export default function AuditLog() {
         </div>
       </div>
       
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="cyber-card rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
         {loading ? (
           <LoadingSpinner />
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-100">
+              <thead className="bg-slate-100 border-b border-slate-200">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Timestamp</th>
-                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">User</th>
-                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Action</th>
-                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Old Value</th>
-                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">New Value</th>
-                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Reason / Notes</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Timestamp</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">User</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Action</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Old Value</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">New Value</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Reason / Notes</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-sm">
                 {logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-500 font-mono text-xs">
+                  <tr key={log.id} className="hover:bg-amber-50/50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-600 font-mono text-xs font-semibold">
                       {log.created_at}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap font-bold text-navy">
+                    <td className="px-6 py-4 whitespace-nowrap font-black text-slate-900">
                       {log.username || 'System'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="bg-navy/10 text-navy font-mono px-2.5 py-1 rounded-full font-bold text-xs uppercase">
+                      <span className="bg-slate-900 text-gold border border-gold/30 font-mono px-2.5 py-1 rounded-xl font-bold text-xs uppercase shadow-sm">
                         {log.action}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-500 max-w-xs truncate font-mono text-xs">
+                    <td className="px-6 py-4 text-slate-500 max-w-xs truncate font-mono text-xs">
                       {formatJson(log.old_value)}
                     </td>
-                    <td className="px-6 py-4 text-gray-800 font-medium max-w-xs truncate font-mono text-xs">
+                    <td className="px-6 py-4 text-slate-800 font-bold max-w-xs truncate font-mono text-xs">
                       {formatJson(log.new_value)}
                     </td>
-                    <td className="px-6 py-4 text-gray-600 italic">
+                    <td className="px-6 py-4 text-slate-700 italic font-medium">
                       {log.reason || '—'}
                     </td>
                   </tr>
                 ))}
                 {logs.length === 0 && (
                   <tr>
-                    <td colSpan="6" className="px-6 py-10 text-center text-gray-500 font-bold text-base">
+                    <td colSpan="6" className="px-6 py-10 text-center text-slate-500 font-bold text-base">
                       No audit records found matching the filter.
                     </td>
                   </tr>

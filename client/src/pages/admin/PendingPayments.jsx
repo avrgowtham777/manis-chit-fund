@@ -28,28 +28,31 @@ export default function PendingPayments() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-red-50 p-6 rounded-xl border border-red-200 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-rose-950/60 p-6 md:p-8 rounded-3xl border-2 border-rose-500/40 gap-4 shadow-2xl cyber-card">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-red-800">Pending & Partial Payments</h2>
-          <p className="text-red-600 mt-1 font-medium">Members with outstanding amounts across all months</p>
+          <h2 className="text-3xl font-black text-white flex items-center gap-2">
+            <span>Pending & Partial Payments</span>
+            <span className="text-2xl">⚠️</span>
+          </h2>
+          <p className="text-rose-300 mt-1 font-semibold text-sm">Members with outstanding amounts across all months</p>
         </div>
-        <span className="bg-red-600 text-white px-5 py-2.5 rounded-full font-black text-xl shadow">
+        <span className="bg-rose-600 text-white px-5 py-2.5 rounded-2xl font-black text-xl shadow-lg border border-rose-400/50">
           {payments.length} Due Records
         </span>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="cyber-card rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
+            <thead className="bg-slate-100 border-b border-slate-200">
               <tr>
-                <th className="px-6 py-4 text-left text-base font-bold text-gray-700">Member</th>
-                <th className="px-6 py-4 text-left text-base font-bold text-gray-700">Month</th>
-                <th className="px-6 py-4 text-right text-base font-bold text-gray-700">Amount Due</th>
-                <th className="px-6 py-4 text-right text-base font-bold text-gray-700">Amount Paid</th>
-                <th className="px-6 py-4 text-right text-base font-bold text-gray-700">Remaining</th>
-                <th className="px-6 py-4 text-center text-base font-bold text-gray-700">Status</th>
-                <th className="px-6 py-4 text-center text-base font-bold text-gray-700">Action</th>
+                <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Member</th>
+                <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Month</th>
+                <th className="px-6 py-4 text-right text-sm font-black text-slate-900 uppercase tracking-wider">Amount Due</th>
+                <th className="px-6 py-4 text-right text-sm font-black text-slate-900 uppercase tracking-wider">Amount Paid</th>
+                <th className="px-6 py-4 text-right text-sm font-black text-slate-900 uppercase tracking-wider">Remaining</th>
+                <th className="px-6 py-4 text-center text-sm font-black text-slate-900 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-center text-sm font-black text-slate-900 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -78,7 +81,7 @@ export default function PendingPayments() {
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     <button
                       onClick={() => navigate('/admin/payments', { state: { memberId: p.member_id, monthId: p.month_id } })}
-                      className="px-4 py-2 bg-navy text-gold hover:bg-navy-dark rounded-lg font-bold text-base shadow"
+                      className="gold-glow-button px-4 py-2 text-slate-950 rounded-xl font-black text-xs shadow-md"
                     >
                       Record Payment
                     </button>

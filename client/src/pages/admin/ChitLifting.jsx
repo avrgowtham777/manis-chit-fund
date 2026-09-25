@@ -129,19 +129,27 @@ export default function ChitLifting() {
 
   return (
     <div className="space-y-8">
-      <h2 className="text-2xl md:text-3xl font-bold text-navy">Chit Lifting Assignment</h2>
+      <div>
+        <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-2">
+          <span>Chit Lifting Assignment</span>
+          <Sparkles className="text-gold" size={26} />
+        </h2>
+        <p className="text-gold font-bold text-sm mt-1">Assign each month's chit auction winner and update receivable payouts</p>
+      </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
-        <h3 className="text-xl font-bold text-navy mb-6">Assign Chit Lift</h3>
+      <div className="cyber-card rounded-3xl p-6 md:p-8 border border-gold/30 shadow-2xl">
+        <h3 className="text-xl font-black text-white mb-6 flex items-center gap-2">
+          <span className="text-gold">✦</span> Assign Monthly Lifter
+        </h3>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-base font-black text-slate-900 mb-2">Select Month *</label>
+              <label className="block text-base font-black text-white mb-2">Select Month *</label>
               <select
                 required
                 value={formData.monthId}
                 onChange={handleMonthChange}
-                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-gold/40 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-base font-black shadow-md transition-all"
               >
                 {months.map(m => (
                   <option key={m.id} value={m.id} className="text-slate-900 py-1">
@@ -152,12 +160,12 @@ export default function ChitLifting() {
             </div>
 
             <div>
-              <label className="block text-base font-black text-slate-900 mb-2">Select Member *</label>
+              <label className="block text-base font-black text-white mb-2">Select Member *</label>
               <select
                 required
                 value={formData.memberId}
                 onChange={(e) => setFormData(prev => ({ ...prev, memberId: e.target.value }))}
-                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-gold/40 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-base font-black shadow-md transition-all"
               >
                 <option value="">-- Choose Member --</option>
                 {members.map(m => (
@@ -169,31 +177,31 @@ export default function ChitLifting() {
             </div>
 
             <div>
-              <label className="block text-base font-black text-slate-900 mb-2">Receivable Chit Amount</label>
-              <div className="px-5 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-2xl font-black text-navy shadow-inner">
+              <label className="block text-base font-black text-white mb-2">Receivable Chit Amount</label>
+              <div className="px-5 py-3.5 bg-slate-950/90 border border-gold/40 rounded-xl text-3xl font-black text-gold shadow-inner">
                 {formatCurrency(selectedReceivable)}
               </div>
             </div>
 
             <div>
-              <label className="block text-base font-black text-slate-900 mb-2">Lift Date *</label>
+              <label className="block text-base font-black text-white mb-2">Lift Date *</label>
               <input
                 type="date"
                 required
                 value={formData.liftDate}
                 onChange={(e) => setFormData(prev => ({ ...prev, liftDate: e.target.value }))}
-                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-gold/40 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-base font-black shadow-md transition-all"
               />
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-base font-black text-slate-900 mb-2">Notes / Remarks</label>
+              <label className="block text-base font-black text-white mb-2">Notes / Remarks</label>
               <input
                 type="text"
                 placeholder="Optional notes or remarks..."
                 value={formData.notes}
                 onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-medium shadow-sm"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-gold/40 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-base font-medium shadow-md transition-all"
               />
             </div>
           </div>
@@ -202,26 +210,29 @@ export default function ChitLifting() {
             <button
               type="submit"
               disabled={!formData.memberId || !formData.monthId}
-              className="px-8 py-4 bg-navy text-gold font-bold rounded-lg text-lg hover:bg-navy-dark shadow-md disabled:opacity-50"
+              className="gold-glow-button px-8 py-4 text-slate-950 font-black rounded-2xl text-lg shadow-xl border-2 border-gold/80 transition-all disabled:opacity-40"
             >
-              CONFIRM LIFT
+              CONFIRM CHIT LIFT 🏆
             </button>
           </div>
         </form>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
-        <h3 className="text-xl font-bold text-navy p-6 bg-gray-50 border-b">23-Month Chit Lift Schedule</h3>
+      <div className="cyber-card rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
+        <h3 className="text-xl font-black text-white p-6 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+          <span>23-Month Chit Lift Schedule</span>
+          <span className="text-xs text-gold font-bold">Progressive Chit Value</span>
+        </h3>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
+          <table className="min-w-full divide-y divide-slate-800">
+            <thead className="bg-slate-100 border-b border-slate-200">
               <tr>
-                <th className="px-6 py-4 text-left text-base font-bold text-gray-700">Month</th>
-                <th className="px-6 py-4 text-left text-base font-bold text-gray-700">Calendar</th>
-                <th className="px-6 py-4 text-right text-base font-bold text-gray-700">Receivable Amount</th>
-                <th className="px-6 py-4 text-left text-base font-bold text-gray-700">Lifter (Member)</th>
-                <th className="px-6 py-4 text-left text-base font-bold text-gray-700">Lift Date</th>
-                <th className="px-6 py-4 text-center text-base font-bold text-gray-700">Action</th>
+                <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Month</th>
+                <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Calendar</th>
+                <th className="px-6 py-4 text-right text-sm font-black text-slate-900 uppercase tracking-wider">Receivable Amount</th>
+                <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Lifter (Member)</th>
+                <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Lift Date</th>
+                <th className="px-6 py-4 text-center text-sm font-black text-slate-900 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">

@@ -191,24 +191,27 @@ export default function RecordPayment() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <h2 className="text-3xl font-black text-slate-900 tracking-tight">Record Member Payment</h2>
-        <p className="text-slate-600 font-semibold mt-1">Select a member and month to record their chit payment</p>
+        <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-2">
+          <span>Record Member Payment</span>
+          <Sparkles className="text-gold" size={26} />
+        </h2>
+        <p className="text-gold font-bold text-sm mt-1">Select a member and month to record an official payment receipt</p>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-slate-200">
+      <div className="cyber-card rounded-3xl p-6 md:p-10 border border-gold/30 shadow-2xl">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-6">
             {/* Member Selector */}
             <div>
-              <label className="block text-base font-black text-slate-900 mb-2 flex items-center gap-2">
-                <User size={18} className="text-navy" />
+              <label className="block text-base font-black text-white mb-2 flex items-center gap-2">
+                <User size={18} className="text-gold" />
                 Select Member *
               </label>
               <select
                 required
                 value={selectedMemberId}
                 onChange={(e) => setSelectedMemberId(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-lg font-bold shadow-sm"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-gold/50 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-lg font-black shadow-md transition-all"
               >
                 <option value="">-- Choose Member --</option>
                 {members.map(m => (
@@ -222,15 +225,15 @@ export default function RecordPayment() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Month Selector */}
               <div>
-                <label className="block text-base font-black text-slate-900 mb-2 flex items-center gap-2">
-                  <Calendar size={18} className="text-navy" />
+                <label className="block text-base font-black text-white mb-2 flex items-center gap-2">
+                  <Calendar size={18} className="text-gold" />
                   Select Month *
                 </label>
                 <select
                   required
                   value={selectedMonthId}
                   onChange={(e) => setSelectedMonthId(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
+                  className="w-full px-4 py-3.5 rounded-xl border-2 border-gold/50 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-base font-black shadow-md transition-all"
                 >
                   <option value="">-- Select Month --</option>
                   {months.map(m => (
@@ -243,8 +246,8 @@ export default function RecordPayment() {
 
               {/* Date */}
               <div>
-                <label className="block text-base font-black text-slate-900 mb-2 flex items-center gap-2">
-                  <Calendar size={18} className="text-navy" />
+                <label className="block text-base font-black text-white mb-2 flex items-center gap-2">
+                  <Calendar size={18} className="text-gold" />
                   Payment Date *
                 </label>
                 <input
@@ -252,7 +255,7 @@ export default function RecordPayment() {
                   required
                   value={paymentDate}
                   onChange={(e) => setPaymentDate(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
+                  className="w-full px-4 py-3.5 rounded-xl border-2 border-gold/50 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-base font-black shadow-md transition-all"
                 />
               </div>
             </div>
@@ -260,17 +263,17 @@ export default function RecordPayment() {
 
           {/* Member Monthly Due Summary Card */}
           {currentPayment && (
-            <div className="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200 grid grid-cols-3 gap-4">
+            <div className="bg-slate-950/90 p-5 rounded-2xl border border-slate-800 grid grid-cols-3 gap-4 shadow-inner">
               <div>
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Amount Due</p>
-                <p className="text-2xl font-black text-slate-900">{formatCurrency(amountDue)}</p>
+                <p className="text-slate-400 font-black text-xs uppercase tracking-wider mb-1">Amount Due</p>
+                <p className="text-2xl font-black text-white">{formatCurrency(amountDue)}</p>
               </div>
               <div>
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Previously Paid</p>
-                <p className="text-2xl font-black text-emerald-600">{formatCurrency(previouslyPaid)}</p>
+                <p className="text-slate-400 font-black text-xs uppercase tracking-wider mb-1">Previously Paid</p>
+                <p className="text-2xl font-black text-emerald-400">{formatCurrency(previouslyPaid)}</p>
               </div>
               <div>
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Status</p>
+                <p className="text-slate-400 font-black text-xs uppercase tracking-wider mb-1">Status</p>
                 <StatusBadge status={currentPayment.status} />
               </div>
             </div>
@@ -279,8 +282,8 @@ export default function RecordPayment() {
           {/* Amount and Remaining */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
             <div>
-              <label className="block text-base font-black text-slate-900 mb-2 flex items-center gap-2">
-                <IndianRupee size={18} className="text-emerald-600" />
+              <label className="block text-base font-black text-white mb-2 flex items-center gap-2">
+                <IndianRupee size={18} className="text-emerald-400" />
                 Amount Paying Now (₹) *
               </label>
               <input
@@ -290,26 +293,26 @@ export default function RecordPayment() {
                 placeholder="e.g. 23000"
                 value={amountPaid}
                 onChange={(e) => setAmountPaid(e.target.value)}
-                className="w-full px-5 py-4 rounded-xl border-2 border-navy bg-white text-slate-950 focus:border-navy focus:ring-4 focus:ring-navy/10 text-2xl font-black shadow-sm"
+                className="w-full px-5 py-4 rounded-xl border-2 border-emerald-500 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-2xl font-black shadow-lg"
               />
             </div>
 
-            <div className="flex flex-col justify-center bg-slate-50 p-4 rounded-2xl border border-slate-200">
-              <p className="text-slate-600 font-bold text-xs uppercase tracking-wider">Remaining Balance After Payment</p>
-              <p className={`text-3xl font-black mt-1 ${remainingAfterPayment > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+            <div className="flex flex-col justify-center bg-slate-950/90 p-5 rounded-2xl border border-slate-800">
+              <p className="text-slate-400 font-black text-xs uppercase tracking-wider">Remaining Balance After Payment</p>
+              <p className={`text-3xl font-black mt-1 ${remainingAfterPayment > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
                 {formatCurrency(remainingAfterPayment)}
               </p>
             </div>
 
             <div>
-              <label className="block text-base font-black text-slate-900 mb-2 flex items-center gap-2">
-                <CreditCard size={18} className="text-navy" />
+              <label className="block text-base font-black text-white mb-2 flex items-center gap-2">
+                <CreditCard size={18} className="text-gold" />
                 Payment Method
               </label>
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-gold/50 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-base font-black shadow-md"
               >
                 <option value="cash" className="text-slate-900">💵 Cash</option>
                 <option value="upi" className="text-slate-900">📱 UPI / GPay / PhonePe</option>
@@ -319,40 +322,40 @@ export default function RecordPayment() {
             </div>
 
             <div>
-              <label className="block text-base font-black text-slate-900 mb-2">
+              <label className="block text-base font-black text-white mb-2">
                 Transaction Reference (Optional)
               </label>
               <input
                 type="text"
                 value={transactionRef}
                 onChange={(e) => setTransactionRef(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-gold/50 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-base font-bold shadow-md"
                 placeholder="e.g. UPI Ref / GPay Transaction ID"
               />
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-base font-black text-slate-900 mb-2">
+              <label className="block text-base font-black text-white mb-2">
                 Notes / Remarks (Optional)
               </label>
               <input
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-medium shadow-sm"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-gold/50 bg-white text-slate-950 focus:border-gold focus:ring-4 focus:ring-gold/20 text-base font-medium shadow-md"
                 placeholder="Any special remarks..."
               />
             </div>
           </div>
 
           {/* Big Confirm Button */}
-          <div className="pt-4 border-t border-slate-200">
+          <div className="pt-4 border-t border-slate-800">
             <button
               type="submit"
               disabled={loading || !selectedMemberId || !selectedMonthId || !amountPaid}
-              className="w-full py-5 rounded-2xl bg-gradient-to-r from-navy via-navy to-slate-900 hover:from-slate-900 hover:to-navy text-gold font-black text-xl shadow-xl transition-all disabled:opacity-40 flex items-center justify-center gap-2 border-2 border-gold/40"
+              className="w-full py-5 rounded-2xl gold-glow-button text-slate-950 font-black text-xl shadow-[0_0_35px_rgba(212,168,67,0.45)] transition-all disabled:opacity-40 flex items-center justify-center gap-2 border-2 border-gold/80"
             >
-              <span>{loading ? 'RECORDING PAYMENT...' : 'CONFIRM & SAVE PAYMENT'}</span>
+              <span>{loading ? 'RECORDING PAYMENT...' : 'CONFIRM & SAVE PAYMENT 🚀'}</span>
               <ArrowRight size={22} />
             </button>
           </div>

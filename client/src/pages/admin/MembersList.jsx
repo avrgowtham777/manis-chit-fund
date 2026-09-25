@@ -43,14 +43,17 @@ export default function MembersList() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-navy">All Members</h2>
-          <p className="text-gray-500 font-medium">Manage chit fund members and view account details</p>
+          <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight flex items-center gap-3">
+            <span>All Chit Fund Members</span>
+            <span className="text-gold text-2xl font-mono">({members.length})</span>
+          </h2>
+          <p className="text-slate-300 font-medium mt-1">Manage members, view lifetime records, and track chit lifts</p>
         </div>
         <button
           onClick={() => navigate('/admin/members/add')}
-          className="bg-navy text-gold px-6 py-3.5 rounded-lg font-bold text-lg hover:bg-navy-dark shadow-md flex items-center justify-center gap-2"
+          className="gold-glow-button px-6 py-3.5 rounded-2xl font-black text-base shadow-xl flex items-center justify-center gap-2 tracking-wide uppercase"
         >
-          + ADD NEW MEMBER
+          <span>✨ ADD NEW MEMBER</span>
         </button>
       </div>
 
@@ -61,7 +64,7 @@ export default function MembersList() {
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="w-full md:w-64 px-4 py-3.5 border-2 border-slate-300 rounded-xl text-base font-bold text-slate-900 bg-white shadow-sm focus:ring-2 focus:ring-navy"
+          className="w-full md:w-64 px-4 py-3.5 border-2 border-gold/40 rounded-2xl text-base font-bold text-slate-900 bg-white shadow-lg focus:ring-2 focus:ring-gold"
         >
           <option value="all">All Members ({members.length})</option>
           <option value="active">Active Members ({members.filter(m => m.status === 'active').length})</option>
@@ -79,48 +82,48 @@ export default function MembersList() {
             <div
               key={member.id}
               onClick={() => navigate(`/admin/members/${member.id}`)}
-              className="bg-white rounded-xl shadow-md p-6 border border-gray-200 cursor-pointer hover:border-navy hover:shadow-lg transition-all"
+              className="cyber-card rounded-3xl p-6 border border-slate-700/80 cursor-pointer transition-all duration-300 group hover:border-gold/60"
             >
-              <div className="flex justify-between items-start mb-3">
+              <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-xl font-bold text-navy">{member.name}</h3>
-                  <span className="inline-block mt-1 font-mono font-bold text-sm bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
+                  <h3 className="text-2xl font-black text-white group-hover:text-gold transition-colors">{member.name}</h3>
+                  <span className="inline-block mt-1 font-mono font-black text-xs bg-gold/20 text-gold px-2.5 py-1 rounded-lg border border-gold/30">
                     {member.member_code}
                   </span>
                 </div>
-                <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${member.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-700'}`}>
-                  {member.status?.toUpperCase()}
+                <span className={`px-3 py-1 rounded-xl text-xs font-black tracking-wider uppercase ${member.status === 'active' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-slate-700 text-slate-300'}`}>
+                  {member.status}
                 </span>
               </div>
 
-              <div className="space-y-2 mt-4 text-base">
-                <div className="flex justify-between text-gray-600">
-                  <span>Phone:</span>
-                  <span className="font-semibold text-gray-900">{member.phone || '—'}</span>
+              <div className="space-y-3 mt-4 text-sm bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                <div className="flex justify-between items-center text-slate-300">
+                  <span className="font-medium">Phone:</span>
+                  <span className="font-bold text-white font-mono">{member.phone || '—'}</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Lift Status:</span>
-                  <span className={`font-bold ${member.lift_status === 'lifted' ? 'text-green-600' : 'text-orange-600'}`}>
-                    {member.lift_status === 'lifted' ? '🟢 LIFTED' : '🟠 NOT YET LIFTED'}
+                <div className="flex justify-between items-center text-slate-300">
+                  <span className="font-medium">Lift Status:</span>
+                  <span className={`font-black text-xs px-2.5 py-1 rounded-lg ${member.lift_status === 'lifted' ? 'bg-emerald-950 text-emerald-400 border border-emerald-500/30' : 'bg-amber-950 text-amber-300 border border-amber-500/30'}`}>
+                    {member.lift_status === 'lifted' ? '🟢 LIFTED' : '🟠 NOT LIFTED'}
                   </span>
                 </div>
                 {member.lift_status === 'lifted' && member.receivable_amount && (
-                  <div className="flex justify-between text-gray-600">
-                    <span>Lift Amount:</span>
-                    <span className="font-bold text-navy">{formatCurrency(member.receivable_amount)}</span>
+                  <div className="flex justify-between items-center text-slate-300">
+                    <span className="font-medium">Lift Amount:</span>
+                    <span className="font-black text-gold text-base">{formatCurrency(member.receivable_amount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-gray-600">
-                  <span>Applicable Monthly:</span>
-                  <span className="font-bold text-navy">
+                <div className="flex justify-between items-center text-slate-300">
+                  <span className="font-medium">Current Monthly:</span>
+                  <span className="font-black text-white text-base">
                     {member.lift_status === 'lifted' ? '₹25,000' : '₹23,000'}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-gray-100 text-right">
-                <span className="text-navy font-bold text-sm hover:underline">
-                  View Full History &rarr;
+              <div className="mt-4 pt-3 flex justify-end items-center">
+                <span className="text-gold font-black text-xs tracking-wider uppercase group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                  View Full Profile &rarr;
                 </span>
               </div>
             </div>

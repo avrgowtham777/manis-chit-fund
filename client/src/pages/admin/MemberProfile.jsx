@@ -75,30 +75,35 @@ export default function MemberProfile() {
         <div>
           <button 
             onClick={() => navigate('/admin/members')}
-            className="text-gray-500 font-bold hover:text-navy text-sm mb-1"
+            className="text-gold font-bold hover:text-amber-300 text-sm mb-2 flex items-center gap-1 transition-colors"
           >
             &larr; Back to All Members
           </button>
-          <h2 className="text-2xl md:text-3xl font-bold text-navy">{member.name}</h2>
+          <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight flex items-center gap-3">
+            <span>{member.name}</span>
+            <span className="text-sm font-mono bg-gold/20 text-gold px-3 py-1 rounded-xl border border-gold/40">
+              {member.member_code}
+            </span>
+          </h2>
         </div>
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setShowResetConfirm(true)}
-            className="px-4 py-2 bg-gray-100 text-gray-800 font-bold rounded-lg hover:bg-gray-200 text-sm"
+            className="px-4 py-2.5 bg-slate-800 text-slate-200 font-bold rounded-xl border border-slate-700 hover:bg-slate-700 text-sm transition-all"
           >
-            Reset Password
+            🔑 Reset Password
           </button>
           {member.status === 'active' ? (
             <button
               onClick={() => setShowArchiveConfirm(true)}
-              className="px-4 py-2 bg-red-100 text-red-700 font-bold rounded-lg hover:bg-red-200 text-sm"
+              className="px-4 py-2.5 bg-rose-950/80 text-rose-300 font-bold rounded-xl border border-rose-700 hover:bg-rose-900 text-sm transition-all"
             >
               Archive Member
             </button>
           ) : (
             <button
               onClick={handleReactivate}
-              className="px-4 py-2 bg-green-100 text-green-700 font-bold rounded-lg hover:bg-green-200 text-sm"
+              className="px-4 py-2.5 bg-emerald-950/80 text-emerald-300 font-bold rounded-xl border border-emerald-700 hover:bg-emerald-900 text-sm transition-all"
             >
               Reactivate Member
             </button>
@@ -106,87 +111,90 @@ export default function MemberProfile() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6">
+      <div className="cyber-card rounded-3xl p-6 border border-slate-800">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-            <User size={32} className="text-navy" />
+          <div className="flex items-center gap-4 p-4 bg-slate-900/80 rounded-2xl border border-slate-800">
+            <User size={32} className="text-gold" />
             <div>
-              <p className="text-sm font-bold text-gray-500">Member ID</p>
-              <p className="text-xl font-bold text-navy">{member.member_code}</p>
+              <p className="text-xs font-black text-slate-400 uppercase tracking-wider">Member ID</p>
+              <p className="text-xl font-black text-white font-mono">{member.member_code}</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-            <Phone size={32} className="text-navy" />
+          <div className="flex items-center gap-4 p-4 bg-slate-900/80 rounded-2xl border border-slate-800">
+            <Phone size={32} className="text-gold" />
             <div>
-              <p className="text-sm font-bold text-gray-500">Phone</p>
-              <p className="text-xl font-bold text-navy">{member.phone || 'Not recorded'}</p>
+              <p className="text-xs font-black text-slate-400 uppercase tracking-wider">Phone</p>
+              <p className="text-xl font-black text-white font-mono">{member.phone || 'Not recorded'}</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-            <Calendar size={32} className="text-navy" />
+          <div className="flex items-center gap-4 p-4 bg-slate-900/80 rounded-2xl border border-slate-800">
+            <Calendar size={32} className="text-gold" />
             <div>
-              <p className="text-sm font-bold text-gray-500">Lift Status</p>
-              <p className={`text-xl font-bold ${member.lift_status === 'lifted' ? 'text-green-600' : 'text-orange-600'}`}>
-                {member.lift_status === 'lifted' ? `Lifted (M${member.lift_month_id})` : 'Not Lifted'}
+              <p className="text-xs font-black text-slate-400 uppercase tracking-wider">Lift Status</p>
+              <p className={`text-lg font-black ${member.lift_status === 'lifted' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                {member.lift_status === 'lifted' ? `🟢 Lifted (M${member.lift_month_id})` : '🟠 Not Lifted'}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-            <IndianRupee size={32} className="text-navy" />
+          <div className="flex items-center gap-4 p-4 bg-slate-900/80 rounded-2xl border border-slate-800">
+            <IndianRupee size={32} className="text-gold" />
             <div>
-              <p className="text-sm font-bold text-gray-500">Current Monthly</p>
-              <p className="text-xl font-bold text-navy">
+              <p className="text-xs font-black text-slate-400 uppercase tracking-wider">Current Monthly</p>
+              <p className="text-xl font-black text-white">
                 {member.lift_status === 'lifted' ? '₹25,000' : '₹23,000'}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-gray-100">
-          <div className="p-4 bg-green-50 rounded-lg">
-            <p className="text-sm font-bold text-green-700">Total Amount Paid</p>
-            <p className="text-2xl font-black text-green-800">{formatCurrency(totalPaid)}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-slate-800">
+          <div className="p-5 bg-emerald-950/40 rounded-2xl border border-emerald-500/30">
+            <p className="text-xs font-black text-emerald-400 uppercase tracking-wider">Total Amount Paid</p>
+            <p className="text-3xl font-black text-emerald-300 mt-1">{formatCurrency(totalPaid)}</p>
           </div>
-          <div className="p-4 bg-red-50 rounded-lg">
-            <p className="text-sm font-bold text-red-700">Total Pending Dues</p>
-            <p className="text-2xl font-black text-red-800">{formatCurrency(totalPending)}</p>
+          <div className="p-5 bg-rose-950/40 rounded-2xl border border-rose-500/30">
+            <p className="text-xs font-black text-rose-400 uppercase tracking-wider">Total Pending Dues</p>
+            <p className="text-3xl font-black text-rose-300 mt-1">{formatCurrency(totalPending)}</p>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
-        <div className="p-5 bg-gray-50 border-b flex justify-between items-center">
-          <h3 className="text-xl font-bold text-navy">Payment History (23 Months)</h3>
-          <span className="text-sm text-gray-500 font-medium">Click Record to record/update payment</span>
+      <div className="cyber-card rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
+        <div className="p-5 bg-slate-900/80 border-b border-slate-800 flex justify-between items-center">
+          <h3 className="text-xl font-black text-white flex items-center gap-2">
+            <span>Payment History (23 Months)</span>
+            <span className="text-gold text-lg">✦</span>
+          </h3>
+          <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">October 2026 - August 2028</span>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
+            <thead className="bg-slate-100 border-b border-slate-200">
               <tr>
-                <th className="px-6 py-4 text-left text-base font-bold text-gray-700">Month</th>
-                <th className="px-6 py-4 text-left text-base font-bold text-gray-700">Calendar</th>
-                <th className="px-6 py-4 text-right text-base font-bold text-gray-700">Due</th>
-                <th className="px-6 py-4 text-right text-base font-bold text-gray-700">Paid</th>
-                <th className="px-6 py-4 text-right text-base font-bold text-gray-700">Remaining</th>
-                <th className="px-6 py-4 text-center text-base font-bold text-gray-700">Status</th>
-                <th className="px-6 py-4 text-center text-base font-bold text-gray-700">Action</th>
+                <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Month</th>
+                <th className="px-6 py-4 text-left text-sm font-black text-slate-900 uppercase tracking-wider">Calendar</th>
+                <th className="px-6 py-4 text-right text-sm font-black text-slate-900 uppercase tracking-wider">Due</th>
+                <th className="px-6 py-4 text-right text-sm font-black text-slate-900 uppercase tracking-wider">Paid</th>
+                <th className="px-6 py-4 text-right text-sm font-black text-slate-900 uppercase tracking-wider">Remaining</th>
+                <th className="px-6 py-4 text-center text-sm font-black text-slate-900 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-center text-sm font-black text-slate-900 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {payments.map((p) => (
-                <tr key={p.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-lg font-bold text-navy">{p.month_label}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-600">{p.calendar_month}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-lg font-medium text-right text-gray-900">{formatCurrency(p.amount_due)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-lg font-bold text-right text-green-600">{formatCurrency(p.amount_paid)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-lg font-bold text-right text-red-600">{formatCurrency(p.remaining_amount)}</td>
+                <tr key={p.id} className="hover:bg-amber-50/50 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-base font-black text-slate-900">{p.month_label}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-600">{p.calendar_month}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base font-bold text-right text-slate-800">{formatCurrency(p.amount_due)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base font-black text-right text-emerald-600">{formatCurrency(p.amount_paid)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base font-black text-right text-rose-600">{formatCurrency(p.remaining_amount)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     <StatusBadge status={p.status} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     <button
                       onClick={() => navigate('/admin/payments', { state: { memberId: member.id, monthId: p.month_id } })}
-                      className="px-3 py-1.5 bg-navy text-gold hover:bg-navy-dark rounded font-bold text-sm"
+                      className="px-4 py-1.5 bg-slate-900 text-gold hover:bg-black hover:text-amber-300 rounded-xl font-black text-xs uppercase tracking-wider border border-gold/40 shadow"
                     >
                       Record
                     </button>

@@ -59,20 +59,21 @@ export default function Dashboard() {
       </div>
 
       {/* Primary Payment Due Card */}
-      <div className="bg-white rounded-2xl shadow-md p-6 border-2 border-navy/10">
-        <p className="text-base font-bold text-gray-500 uppercase tracking-wide">Your Monthly Payment</p>
-        <p className="text-4xl font-black text-navy mt-1">
+      <div className="cyber-card rounded-3xl p-6 md:p-8 border border-gold/40 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+        <p className="text-xs font-black text-gold uppercase tracking-wider">Your Monthly Chit Payment</p>
+        <p className="text-4xl sm:text-5xl font-black text-white mt-1">
           {formatCurrency(data.currentPayment)}
         </p>
 
         {thisMonthPayment && (
-          <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between bg-gray-50 p-4 rounded-xl">
+          <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
             <div>
-              <p className="text-sm font-bold text-gray-500">
+              <p className="text-xs font-bold text-slate-400">
                 {thisMonthPayment.month_label} ({thisMonthPayment.calendar_month})
               </p>
-              <p className="text-base font-bold text-navy">
-                Due: {formatCurrency(thisMonthPayment.remaining_amount)}
+              <p className="text-base font-black text-white mt-0.5">
+                Due: <span className="text-gold">{formatCurrency(thisMonthPayment.remaining_amount)}</span>
               </p>
             </div>
             <StatusBadge status={thisMonthPayment.status} />
@@ -82,33 +83,33 @@ export default function Dashboard() {
 
       {/* Financial Summary */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-white rounded-2xl shadow-sm p-5 border border-gray-200 text-center">
-          <p className="text-sm font-bold text-gray-500 mb-1">TOTAL PAID</p>
-          <p className="text-2xl font-black text-green-600">{formatCurrency(data.totalPaid)}</p>
+        <div className="cyber-card rounded-2xl p-5 border border-emerald-500/30 bg-emerald-950/20 text-center shadow-lg">
+          <p className="text-xs font-black text-emerald-400 uppercase tracking-wider mb-1">TOTAL PAID</p>
+          <p className="text-2xl sm:text-3xl font-black text-emerald-300">{formatCurrency(data.totalPaid)}</p>
         </div>
-        <div className="bg-white rounded-2xl shadow-sm p-5 border border-gray-200 text-center">
-          <p className="text-sm font-bold text-gray-500 mb-1">TOTAL PENDING</p>
-          <p className="text-2xl font-black text-red-600">{formatCurrency(data.totalPending)}</p>
+        <div className="cyber-card rounded-2xl p-5 border border-rose-500/30 bg-rose-950/20 text-center shadow-lg">
+          <p className="text-xs font-black text-rose-400 uppercase tracking-wider mb-1">TOTAL PENDING</p>
+          <p className="text-2xl sm:text-3xl font-black text-rose-300">{formatCurrency(data.totalPending)}</p>
         </div>
       </div>
 
       {/* Chit Status Card */}
-      <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-200 flex justify-between items-center">
+      <div className="cyber-card rounded-2xl p-6 border border-slate-800 flex justify-between items-center shadow-lg">
         <div>
-          <p className="text-sm font-bold text-gray-500">CHIT STATUS</p>
-          <p className={`text-2xl font-black mt-1 ${data.member?.lift_status === 'lifted' ? 'text-green-600' : 'text-navy'}`}>
-            {data.member?.lift_status === 'lifted' ? '🎉 Lifted' : 'Not Yet Lifted'}
+          <p className="text-xs font-black text-slate-400 uppercase tracking-wider">CHIT STATUS</p>
+          <p className={`text-xl sm:text-2xl font-black mt-1 ${data.member?.lift_status === 'lifted' ? 'text-emerald-400' : 'text-amber-400'}`}>
+            {data.member?.lift_status === 'lifted' ? '🎉 Lifted' : '🟠 Not Yet Lifted'}
           </p>
           {data.liftMonth && (
-            <p className="text-sm font-semibold text-gray-600 mt-1">
+            <p className="text-xs font-semibold text-slate-300 mt-1">
               Lift Month: {data.liftMonth.month_label} ({data.liftMonth.calendar_month})
             </p>
           )}
         </div>
         {data.member?.receivable_amount && (
           <div className="text-right">
-            <p className="text-sm font-bold text-gray-500">Receivable Amount</p>
-            <p className="text-xl font-black text-gold">{formatCurrency(data.member.receivable_amount)}</p>
+            <p className="text-xs font-black text-slate-400 uppercase tracking-wider">Receivable Amount</p>
+            <p className="text-xl sm:text-2xl font-black text-gold">{formatCurrency(data.member.receivable_amount)}</p>
           </div>
         )}
       </div>
@@ -117,31 +118,31 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
         <Link 
           to="/member/payments" 
-          className="flex items-center p-5 bg-navy text-white rounded-xl shadow-md font-bold text-lg hover:bg-navy-dark transition-all"
+          className="cyber-card flex items-center p-5 rounded-2xl shadow-xl font-black text-base text-white border border-slate-700/80 hover:border-gold transition-all group"
         >
-          <CreditCard size={28} className="mr-3 text-gold" /> MY PAYMENTS
+          <CreditCard size={28} className="mr-3 text-gold group-hover:scale-110 transition-transform" /> MY PAYMENTS
         </Link>
         <Link 
           to="/member/chit" 
-          className="flex items-center p-5 bg-navy text-white rounded-xl shadow-md font-bold text-lg hover:bg-navy-dark transition-all"
+          className="cyber-card flex items-center p-5 rounded-2xl shadow-xl font-black text-base text-white border border-slate-700/80 hover:border-gold transition-all group"
         >
-          <IndianRupee size={28} className="mr-3 text-gold" /> MY CHIT DETAILS
+          <IndianRupee size={28} className="mr-3 text-gold group-hover:scale-110 transition-transform" /> MY CHIT DETAILS
         </Link>
         <Link 
           to="/member/receipts" 
-          className="flex items-center p-5 bg-navy text-white rounded-xl shadow-md font-bold text-lg hover:bg-navy-dark transition-all"
+          className="cyber-card flex items-center p-5 rounded-2xl shadow-xl font-black text-base text-white border border-slate-700/80 hover:border-gold transition-all group"
         >
-          <FileText size={28} className="mr-3 text-gold" /> MY RECEIPTS
+          <FileText size={28} className="mr-3 text-gold group-hover:scale-110 transition-transform" /> MY RECEIPTS
         </Link>
         <Link 
           to="/member/notifications" 
-          className="flex items-center justify-between p-5 bg-navy text-white rounded-xl shadow-md font-bold text-lg hover:bg-navy-dark transition-all"
+          className="cyber-card flex items-center justify-between p-5 rounded-2xl shadow-xl font-black text-base text-white border border-slate-700/80 hover:border-gold transition-all group"
         >
           <div className="flex items-center">
-            <Bell size={28} className="mr-3 text-gold" /> NOTIFICATIONS
+            <Bell size={28} className="mr-3 text-gold group-hover:scale-110 transition-transform" /> NOTIFICATIONS
           </div>
           {data.unreadNotifications > 0 && (
-            <span className="bg-red-500 text-white text-xs px-2.5 py-1 rounded-full font-black">
+            <span className="bg-rose-600 text-white text-xs px-2.5 py-1 rounded-full font-black animate-pulse">
               {data.unreadNotifications} NEW
             </span>
           )}

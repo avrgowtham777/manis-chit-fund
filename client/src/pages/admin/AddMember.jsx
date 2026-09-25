@@ -50,48 +50,57 @@ export default function AddMember() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <h2 className="text-2xl md:text-3xl font-bold text-navy">Add New Member</h2>
+      <div>
+        <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight flex items-center gap-3">
+          <span>Add New Chit Member</span>
+          <span className="text-gold text-2xl">✨</span>
+        </h2>
+        <p className="text-slate-300 font-medium mt-1">Enroll a new participant into the 23-month chit fund schedule</p>
+      </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
-        {error && <div className="mb-6 bg-red-50 text-red-600 p-4 rounded-lg font-medium text-lg">{error}</div>}
+      <div className="cyber-card rounded-3xl p-6 md:p-8 border border-slate-800 shadow-2xl">
+        {error && <div className="mb-6 bg-rose-950 text-rose-300 border border-rose-500/50 p-4 rounded-2xl font-bold text-base">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-base font-black text-slate-900 mb-1.5">Full Name *</label>
+              <label className="block text-xs font-black text-gold uppercase tracking-wider mb-2">Full Name *</label>
               <input
                 type="text"
                 name="name"
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
+                placeholder="e.g. Ramesh Kumar"
+                className="w-full px-4 py-3.5 rounded-2xl border-2 border-gold/40 focus:ring-2 focus:ring-gold text-base font-bold text-slate-900 bg-white shadow-lg transition-all"
               />
             </div>
             <div>
-              <label className="block text-base font-black text-slate-900 mb-1.5">Phone Number *</label>
+              <label className="block text-xs font-black text-gold uppercase tracking-wider mb-2">Phone Number *</label>
               <input
                 type="tel"
                 name="phone"
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
+                placeholder="10-digit mobile number"
+                className="w-full px-4 py-3.5 rounded-2xl border-2 border-gold/40 focus:ring-2 focus:ring-gold text-base font-bold text-slate-900 bg-white shadow-lg transition-all"
               />
             </div>
             <div>
-              <label className="block text-base font-black text-slate-900 mb-1.5">Login Username *</label>
+              <label className="block text-xs font-black text-gold uppercase tracking-wider mb-2">Login Username *</label>
               <input
                 type="text"
                 name="username"
                 required
                 value={formData.username}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
+                placeholder="e.g. mcf016"
+                className="w-full px-4 py-3.5 rounded-2xl border-2 border-gold/40 focus:ring-2 focus:ring-gold text-base font-bold text-slate-900 bg-white shadow-lg transition-all"
               />
             </div>
             <div>
-              <label className="block text-base font-black text-slate-900 mb-1.5">Initial Password *</label>
+              <label className="block text-xs font-black text-gold uppercase tracking-wider mb-2">Initial Password *</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -99,19 +108,20 @@ export default function AddMember() {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="flex-1 px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
+                  placeholder="Set password"
+                  className="flex-1 px-4 py-3.5 rounded-2xl border-2 border-gold/40 focus:ring-2 focus:ring-gold text-base font-bold text-slate-900 bg-white shadow-lg transition-all"
                 />
                 <button
                   type="button"
                   onClick={generatePassword}
-                  className="px-5 py-3 bg-slate-200 text-slate-900 font-black rounded-xl hover:bg-slate-300 text-sm shadow-sm"
+                  className="px-5 py-3.5 bg-slate-800 text-gold hover:bg-slate-700 border border-gold/30 font-black rounded-2xl text-xs uppercase tracking-wider shadow-lg transition-all"
                 >
                   GENERATE
                 </button>
               </div>
             </div>
             <div>
-              <label className="block text-base font-black text-slate-900 mb-1.5">Joining Month (1-23)</label>
+              <label className="block text-xs font-black text-gold uppercase tracking-wider mb-2">Joining Month (1-23)</label>
               <input
                 type="number"
                 name="joiningMonth"
@@ -119,33 +129,34 @@ export default function AddMember() {
                 max="23"
                 value={formData.joiningMonth}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
+                className="w-full px-4 py-3.5 rounded-2xl border-2 border-gold/40 focus:ring-2 focus:ring-gold text-base font-bold text-slate-900 bg-white shadow-lg transition-all"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-base font-black text-slate-900 mb-1.5">Notes (Optional)</label>
+              <label className="block text-xs font-black text-gold uppercase tracking-wider mb-2">Notes (Optional)</label>
               <textarea
                 name="notes"
                 value={formData.notes}
                 onChange={handleChange}
                 rows="3"
-                className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
+                placeholder="Add any specific notes or references..."
+                className="w-full px-4 py-3.5 rounded-2xl border-2 border-gold/40 focus:ring-2 focus:ring-gold text-base font-bold text-slate-900 bg-white shadow-lg transition-all"
               ></textarea>
             </div>
           </div>
 
-          <div className="pt-6 border-t border-gray-200 flex justify-end gap-4">
+          <div className="pt-6 border-t border-slate-800 flex justify-end gap-4">
             <button
               type="button"
               onClick={() => navigate('/admin/members')}
-              className="px-8 py-3.5 bg-slate-200 text-slate-800 font-bold rounded-xl text-base hover:bg-slate-300 shadow-sm"
+              className="px-8 py-3.5 bg-slate-800 text-slate-200 font-bold rounded-2xl text-sm hover:bg-slate-700 transition-colors uppercase tracking-wider"
             >
               CANCEL
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-8 py-3.5 bg-navy text-gold hover:bg-navy-dark font-black rounded-xl text-base shadow-md disabled:opacity-70 transition-all"
+              className="gold-glow-button px-8 py-3.5 rounded-2xl font-black text-sm shadow-xl uppercase tracking-wider disabled:opacity-70 transition-all"
             >
               {loading ? 'SAVING...' : 'SAVE MEMBER'}
             </button>

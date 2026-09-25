@@ -35,9 +35,15 @@ export default function MemberNotifications() {
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-navy">Notifications</h2>
-        <span className="text-sm font-semibold text-gray-500">
-          {notifications.filter(n => !n.is_read).length} unread
+        <div>
+          <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight flex items-center gap-3">
+            <span>Notifications</span>
+            <span className="text-gold text-2xl">🔔</span>
+          </h2>
+          <p className="text-slate-300 font-medium mt-1">Live updates on chit lifts, payment verifications, and reminders</p>
+        </div>
+        <span className="text-xs font-black text-gold bg-gold/20 px-3 py-1.5 rounded-xl border border-gold/40">
+          {notifications.filter(n => !n.is_read).length} UNREAD
         </span>
       </div>
 
@@ -48,40 +54,40 @@ export default function MemberNotifications() {
             <div 
               key={n.id} 
               onClick={() => !isRead && markRead(n.id)}
-              className={`p-5 rounded-2xl border transition-all ${
+              className={`cyber-card p-5 rounded-3xl border transition-all ${
                 isRead 
-                  ? 'bg-gray-50 border-gray-200' 
-                  : 'bg-blue-50/70 border-blue-300 shadow-sm cursor-pointer hover:bg-blue-50'
+                  ? 'border-slate-800 bg-slate-900/60 opacity-80' 
+                  : 'border-gold/50 bg-slate-900/90 shadow-2xl cursor-pointer hover:border-gold'
               }`}
             >
               <div className="flex justify-between items-start">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl">
                     {n.type === 'payment' ? '💳' : n.type === 'lift' ? '🎉' : '🔔'}
                   </span>
-                  <h3 className={`text-xl ${isRead ? 'text-gray-700 font-bold' : 'text-navy font-black'}`}>
+                  <h3 className={`text-lg sm:text-xl font-black ${isRead ? 'text-slate-300' : 'text-white'}`}>
                     {n.title}
                   </h3>
                 </div>
                 {!isRead && (
-                  <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                  <span className="bg-gold text-slate-950 text-xs px-2.5 py-0.5 rounded-full font-black uppercase tracking-wider shadow">
                     NEW
                   </span>
                 )}
               </div>
-              <p className="text-gray-800 text-base mt-2 font-medium leading-relaxed">{n.message}</p>
-              <div className="flex justify-between items-center mt-3 text-xs text-gray-400 font-medium">
+              <p className="text-slate-200 text-sm sm:text-base mt-2 font-medium leading-relaxed">{n.message}</p>
+              <div className="flex justify-between items-center mt-3 text-xs text-slate-400 font-bold">
                 <span>{n.created_at}</span>
-                {!isRead && <span className="text-blue-600 font-bold">Tap to mark as read</span>}
+                {!isRead && <span className="text-gold">Tap to mark as read</span>}
               </div>
             </div>
           );
         })}
         {notifications.length === 0 && (
-          <div className="bg-white rounded-2xl p-10 text-center shadow border border-gray-100">
+          <div className="cyber-card rounded-3xl p-10 text-center border border-slate-800 shadow-xl">
             <p className="text-3xl mb-2">🔔</p>
-            <p className="text-gray-500 font-bold text-lg">No notifications right now.</p>
-            <p className="text-gray-400 text-sm mt-1">Updates on your chit fund payments and lifts will be posted here.</p>
+            <p className="text-white font-black text-xl">No notifications right now.</p>
+            <p className="text-slate-400 text-sm mt-1">Updates on your chit fund payments and lifts will be posted here.</p>
           </div>
         )}
       </div>

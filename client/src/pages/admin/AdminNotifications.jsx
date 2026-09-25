@@ -29,36 +29,45 @@ export default function AdminNotifications() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl md:text-3xl font-bold text-navy">Notifications & Alerts</h2>
+      <div>
+        <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight flex items-center gap-3">
+          <span>Notifications & Alerts</span>
+          <span className="text-gold text-2xl">🔔</span>
+        </h2>
+        <p className="text-slate-300 font-medium mt-1">Live system notifications, collection milestones, and pending dues alerts</p>
+      </div>
 
       {summary && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-red-50 p-4 rounded-xl border border-red-200">
-            <p className="text-red-800 font-bold">Pending</p>
-            <p className="text-2xl font-black text-red-600">{summary.pendingCount || 0}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="cyber-card p-5 rounded-2xl border border-rose-500/40 bg-rose-950/20 shadow-lg">
+            <p className="text-xs font-black text-rose-400 uppercase tracking-wider">Pending Dues</p>
+            <p className="text-3xl font-black text-rose-300 mt-1">{summary.pendingCount || 0}</p>
           </div>
-          <div className="bg-orange-50 p-4 rounded-xl border border-orange-200">
-            <p className="text-orange-800 font-bold">Partial</p>
-            <p className="text-2xl font-black text-orange-600">{summary.partialCount || 0}</p>
+          <div className="cyber-card p-5 rounded-2xl border border-amber-500/40 bg-amber-950/20 shadow-lg">
+            <p className="text-xs font-black text-amber-400 uppercase tracking-wider">Partial Payments</p>
+            <p className="text-3xl font-black text-amber-300 mt-1">{summary.partialCount || 0}</p>
           </div>
-          <div className="bg-green-50 p-4 rounded-xl border border-green-200">
-            <p className="text-green-800 font-bold">Completed</p>
-            <p className="text-2xl font-black text-green-600">{summary.completedCount || 0}</p>
+          <div className="cyber-card p-5 rounded-2xl border border-emerald-500/40 bg-emerald-950/20 shadow-lg">
+            <p className="text-xs font-black text-emerald-400 uppercase tracking-wider">Completed Payments</p>
+            <p className="text-3xl font-black text-emerald-300 mt-1">{summary.completedCount || 0}</p>
           </div>
         </div>
       )}
 
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-xl font-bold text-navy mb-4">Recent System Notifications</h3>
+      <div className="cyber-card rounded-3xl p-6 md:p-8 border border-slate-800 shadow-2xl">
+        <h3 className="text-xl font-black text-white mb-6 flex items-center gap-2">
+          <span>Recent System Notifications</span>
+          <span className="text-gold">✦</span>
+        </h3>
         <div className="space-y-4">
           {notifications.map((n, i) => (
-            <div key={i} className={`p-4 rounded-lg border-l-4 ${n.type === 'warning' ? 'bg-orange-50 border-orange-500' : 'bg-blue-50 border-blue-500'}`}>
-              <p className="font-bold text-gray-800 text-lg">{n.title}</p>
-              <p className="text-gray-600">{n.message}</p>
-              <p className="text-sm text-gray-400 mt-2">{new Date(n.createdAt).toLocaleString()}</p>
+            <div key={i} className={`p-5 rounded-2xl border ${n.type === 'warning' ? 'bg-amber-950/20 border-amber-500/40' : 'bg-slate-900/80 border-slate-800'}`}>
+              <p className="font-black text-white text-lg">{n.title}</p>
+              <p className="text-slate-300 text-sm mt-1">{n.message}</p>
+              <p className="text-xs text-gold font-mono mt-2">{new Date(n.createdAt).toLocaleString()}</p>
             </div>
           ))}
-          {notifications.length === 0 && <p className="text-gray-500 text-lg">No new notifications.</p>}
+          {notifications.length === 0 && <p className="text-slate-400 text-base font-medium">No new notifications right now.</p>}
         </div>
       </div>
     </div>

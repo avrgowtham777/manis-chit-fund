@@ -25,7 +25,13 @@ export default function MyPayments() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-navy">My Payment History</h2>
+      <div>
+        <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight flex items-center gap-3">
+          <span>My Payment History</span>
+          <span className="text-gold text-2xl">💳</span>
+        </h2>
+        <p className="text-slate-300 font-medium mt-1">23-month scheduled breakdown with live payment statuses</p>
+      </div>
       
       <PaymentTable payments={payments} />
     </div>
