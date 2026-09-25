@@ -4,11 +4,11 @@ set -e
 
 echo "=== Installing Server Dependencies ==="
 cd server
-npm install --production=false
+npm install --include=dev
 
 echo "=== Installing Client Dependencies ==="
 cd ../client
-npm install
+npm install --include=dev
 
 echo "=== Building Client Production Bundle ==="
 npm run build
