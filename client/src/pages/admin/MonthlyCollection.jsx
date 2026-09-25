@@ -6,6 +6,7 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 import CurrencyDisplay from '../../components/CurrencyDisplay';
 import StatusBadge from '../../components/StatusBadge';
 import { formatCurrency } from '../../utils/currency';
+import { Sparkles } from 'lucide-react';
 
 export default function MonthlyCollection() {
   const { monthId } = useParams();

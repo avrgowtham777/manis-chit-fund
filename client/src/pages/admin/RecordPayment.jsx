@@ -4,7 +4,7 @@ import api from '../../services/api';
 import confetti from 'canvas-confetti';
 import { formatCurrency } from '../../utils/currency';
 import StatusBadge from '../../components/StatusBadge';
-import { CheckCircle2, IndianRupee, User, Calendar, CreditCard, FileCheck, ArrowRight } from 'lucide-react';
+import { CheckCircle2, IndianRupee, User, Calendar, CreditCard, FileCheck, ArrowRight, Sparkles } from 'lucide-react';
 
 export default function RecordPayment() {
   const location = useLocation();

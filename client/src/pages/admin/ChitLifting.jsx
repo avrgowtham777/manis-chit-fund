@@ -4,6 +4,7 @@ import ConfirmDialog from '../../components/ConfirmDialog';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import confetti from 'canvas-confetti';
 import { formatCurrency } from '../../utils/currency';
+import { Sparkles } from 'lucide-react';
 
 export default function ChitLifting() {
   const [members, setMembers] = useState([]);
