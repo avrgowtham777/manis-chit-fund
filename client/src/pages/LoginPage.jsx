@@ -99,8 +99,8 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label className="block text-base font-bold text-gray-200 mb-1.5 flex items-center gap-2">
-                <User size={16} className="text-gold" />
+              <label className="block text-base font-black text-white mb-1.5 flex items-center gap-2">
+                <User size={18} className="text-gold" />
                 {tab === 'member' ? 'Member ID / Username' : 'Organiser Username'}
               </label>
               <div className="mt-1">
@@ -110,14 +110,14 @@ export default function LoginPage() {
                   placeholder={tab === 'member' ? 'e.g. mcf001' : 'e.g. admin'}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="appearance-none block w-full px-4 py-3.5 bg-slate-900/80 border border-slate-600 rounded-xl shadow-inner placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent text-lg font-medium transition-all"
+                  className="appearance-none block w-full px-4 py-3.5 bg-white border-2 border-slate-300 rounded-xl shadow-sm placeholder:text-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-gold focus:border-gold text-lg font-bold transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-base font-bold text-gray-200 mb-1.5 flex items-center gap-2">
-                <KeyRound size={16} className="text-gold" /> Password
+              <label className="block text-base font-black text-white mb-1.5 flex items-center gap-2">
+                <KeyRound size={18} className="text-gold" /> Password
               </label>
               <div className="mt-1">
                 <input
@@ -126,13 +126,13 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-4 py-3.5 bg-slate-900/80 border border-slate-600 rounded-xl shadow-inner placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent text-lg font-medium transition-all"
+                  className="appearance-none block w-full px-4 py-3.5 bg-white border-2 border-slate-300 rounded-xl shadow-sm placeholder:text-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-gold focus:border-gold text-lg font-bold transition-all"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="text-red-400 text-base bg-red-950/60 border border-red-800 p-4 rounded-xl font-bold flex items-center gap-2 animate-shake">
+              <div className="text-red-300 text-base bg-red-950/80 border-2 border-red-700 p-4 rounded-xl font-bold flex items-center gap-2 animate-shake">
                 <span>⚠️</span> {error}
               </div>
             )}
@@ -148,9 +148,9 @@ export default function LoginPage() {
             </div>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-700/60 text-center text-xs text-gray-400">
-            <p>Demo Admin: <span className="text-gold font-mono font-bold">admin / Admin@123</span></p>
-            <p className="mt-1">Demo Member: <span className="text-gold font-mono font-bold">mcf001 / Member@123</span></p>
+          <div className="mt-6 pt-6 border-t border-slate-700/60 text-center text-sm text-gray-300 font-medium">
+            <p>Demo Admin: <span className="text-gold font-mono font-bold bg-slate-900/80 px-2 py-0.5 rounded">admin / Admin@123</span></p>
+            <p className="mt-2">Demo Member: <span className="text-gold font-mono font-bold bg-slate-900/80 px-2 py-0.5 rounded">mcf001 / Member@123</span></p>
           </div>
         </div>
       </div>

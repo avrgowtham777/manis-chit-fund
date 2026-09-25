@@ -7,8 +7,8 @@ export default function MemberLayout() {
   const { user, logout } = useAuth();
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
-      <header className="bg-slate-900/90 backdrop-blur-md border-b border-gold/30 flex items-center justify-between px-4 py-3 sm:px-6 sticky top-0 z-40 shadow-lg">
+    <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col">
+      <header className="bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 py-3 sm:px-6 sticky top-0 z-40 shadow-sm">
         <div className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-gold to-amber-500 flex items-center justify-center text-slate-950 font-black shadow-md shadow-gold/30">
             M
@@ -16,7 +16,7 @@ export default function MemberLayout() {
           <div>
             <h1 className="text-lg sm:text-xl font-black tracking-tight text-white flex items-center gap-1.5">
               <span>MANI'S CHIT FUND</span>
-              <Sparkles size={16} className="text-gold animate-spin" style={{ animationDuration: '6s' }} />
+              <Sparkles size={16} className="text-gold" />
             </h1>
             <p className="text-gold text-xs font-bold tracking-wide">
               MEMBER PORTAL • OCT 2026
@@ -33,7 +33,7 @@ export default function MemberLayout() {
         </button>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 pb-28">
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 pb-28 bg-slate-100 text-slate-900">
         <Outlet />
       </main>
 

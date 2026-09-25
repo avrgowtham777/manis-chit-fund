@@ -136,15 +136,15 @@ export default function ChitLifting() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Select Month *</label>
+              <label className="block text-base font-black text-slate-900 mb-2">Select Month *</label>
               <select
                 required
                 value={formData.monthId}
                 onChange={handleMonthChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
               >
                 {months.map(m => (
-                  <option key={m.id} value={m.id}>
+                  <option key={m.id} value={m.id} className="text-slate-900 py-1">
                     {m.month_label} — {m.calendar_month}
                   </option>
                 ))}
@@ -152,16 +152,16 @@ export default function ChitLifting() {
             </div>
 
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Select Member *</label>
+              <label className="block text-base font-black text-slate-900 mb-2">Select Member *</label>
               <select
                 required
                 value={formData.memberId}
                 onChange={(e) => setFormData(prev => ({ ...prev, memberId: e.target.value }))}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
               >
                 <option value="">-- Choose Member --</option>
                 {members.map(m => (
-                  <option key={m.id} value={m.id}>
+                  <option key={m.id} value={m.id} className="text-slate-900 py-1">
                     {m.name} ({m.member_code}) {m.lift_status === 'lifted' ? '— [Already Lifted]' : ''}
                   </option>
                 ))}
@@ -169,31 +169,31 @@ export default function ChitLifting() {
             </div>
 
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Receivable Chit Amount</label>
-              <div className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-2xl font-black text-navy">
+              <label className="block text-base font-black text-slate-900 mb-2">Receivable Chit Amount</label>
+              <div className="px-5 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-2xl font-black text-navy shadow-inner">
                 {formatCurrency(selectedReceivable)}
               </div>
             </div>
 
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Lift Date *</label>
+              <label className="block text-base font-black text-slate-900 mb-2">Lift Date *</label>
               <input
                 type="date"
                 required
                 value={formData.liftDate}
                 onChange={(e) => setFormData(prev => ({ ...prev, liftDate: e.target.value }))}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
               />
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-lg font-bold text-gray-700 mb-2">Notes</label>
+              <label className="block text-base font-black text-slate-900 mb-2">Notes / Remarks</label>
               <input
                 type="text"
                 placeholder="Optional notes or remarks..."
                 value={formData.notes}
                 onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-medium shadow-sm"
               />
             </div>
           </div>

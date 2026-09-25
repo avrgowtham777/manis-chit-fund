@@ -61,7 +61,7 @@ export default function MembersList() {
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="w-full md:w-64 px-4 py-3 border border-gray-300 rounded-lg text-lg font-medium focus:ring-navy focus:border-navy bg-white shadow-sm"
+          className="w-full md:w-64 px-4 py-3.5 border-2 border-slate-300 rounded-xl text-base font-bold text-slate-900 bg-white shadow-sm focus:ring-2 focus:ring-navy"
         >
           <option value="all">All Members ({members.length})</option>
           <option value="active">Active Members ({members.filter(m => m.status === 'active').length})</option>

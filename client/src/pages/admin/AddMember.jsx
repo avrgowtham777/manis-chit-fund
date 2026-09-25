@@ -58,40 +58,40 @@ export default function AddMember() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Full Name *</label>
+              <label className="block text-base font-black text-slate-900 mb-1.5">Full Name *</label>
               <input
                 type="text"
                 name="name"
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
               />
             </div>
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Phone Number *</label>
+              <label className="block text-base font-black text-slate-900 mb-1.5">Phone Number *</label>
               <input
                 type="tel"
                 name="phone"
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
               />
             </div>
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Login Username *</label>
+              <label className="block text-base font-black text-slate-900 mb-1.5">Login Username *</label>
               <input
                 type="text"
                 name="username"
                 required
                 value={formData.username}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
               />
             </div>
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Initial Password *</label>
+              <label className="block text-base font-black text-slate-900 mb-1.5">Initial Password *</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -99,19 +99,19 @@ export default function AddMember() {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                  className="flex-1 px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
                 />
                 <button
                   type="button"
                   onClick={generatePassword}
-                  className="px-4 py-3 bg-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-300"
+                  className="px-5 py-3 bg-slate-200 text-slate-900 font-black rounded-xl hover:bg-slate-300 text-sm shadow-sm"
                 >
                   GENERATE
                 </button>
               </div>
             </div>
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Joining Month (1-23)</label>
+              <label className="block text-base font-black text-slate-900 mb-1.5">Joining Month (1-23)</label>
               <input
                 type="number"
                 name="joiningMonth"
@@ -119,17 +119,17 @@ export default function AddMember() {
                 max="23"
                 value={formData.joiningMonth}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-lg font-bold text-gray-700 mb-2">Notes (Optional)</label>
+              <label className="block text-base font-black text-slate-900 mb-1.5">Notes (Optional)</label>
               <textarea
                 name="notes"
                 value={formData.notes}
                 onChange={handleChange}
                 rows="3"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
               ></textarea>
             </div>
           </div>
@@ -138,14 +138,14 @@ export default function AddMember() {
             <button
               type="button"
               onClick={() => navigate('/admin/members')}
-              className="px-8 py-4 bg-gray-100 text-gray-700 font-bold rounded-lg text-lg hover:bg-gray-200"
+              className="px-8 py-3.5 bg-slate-200 text-slate-800 font-bold rounded-xl text-base hover:bg-slate-300 shadow-sm"
             >
               CANCEL
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-8 py-4 bg-navy text-white font-bold rounded-lg text-lg hover:bg-navy-dark disabled:opacity-70"
+              className="px-8 py-3.5 bg-navy text-gold hover:bg-navy-dark font-black rounded-xl text-base shadow-md disabled:opacity-70 transition-all"
             >
               {loading ? 'SAVING...' : 'SAVE MEMBER'}
             </button>

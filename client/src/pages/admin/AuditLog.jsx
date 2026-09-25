@@ -48,7 +48,7 @@ export default function AuditLog() {
           <select
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
-            className="px-4 py-2.5 border border-gray-300 rounded-lg text-base font-semibold focus:ring-navy focus:border-navy bg-white shadow-sm"
+            className="px-4 py-3 border-2 border-slate-300 rounded-xl text-base font-bold text-slate-900 focus:ring-2 focus:ring-navy focus:border-navy bg-white shadow-sm"
           >
             <option value="">All Actions</option>
             <option value="record_payment">Payments Recorded</option>

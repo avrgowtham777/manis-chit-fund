@@ -103,63 +103,63 @@ export default function Dashboard() {
 
       {/* 4 Big Key Stats with Icons */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden glow-card">
+        <div className="bg-white border-2 border-slate-200 rounded-3xl p-6 shadow-md hover:shadow-lg transition-all glow-card">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Members</p>
-              <p className="text-3xl md:text-4xl font-black text-white mt-1">{data.totalMembers}</p>
-              <p className="text-xs font-semibold text-emerald-400 mt-2 flex items-center gap-1">
+              <p className="text-xs font-black text-slate-500 uppercase tracking-wider">Total Members</p>
+              <p className="text-3xl md:text-4xl font-black text-slate-900 mt-1">{data.totalMembers}</p>
+              <p className="text-xs font-black text-emerald-700 mt-2 flex items-center gap-1">
                 <CheckCircle2 size={14} /> All 15 Registered
               </p>
             </div>
-            <div className="p-3.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-2xl">
+            <div className="p-3.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-2xl">
               <Users size={28} />
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden glow-card">
+        <div className="bg-white border-2 border-slate-200 rounded-3xl p-6 shadow-md hover:shadow-lg transition-all glow-card">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Month</p>
-              <p className="text-3xl md:text-4xl font-black text-gold mt-1">Month 1</p>
-              <p className="text-xs font-semibold text-gray-400 mt-2">
+              <p className="text-xs font-black text-slate-500 uppercase tracking-wider">Active Month</p>
+              <p className="text-3xl md:text-4xl font-black text-navy mt-1">Month 1</p>
+              <p className="text-xs font-bold text-slate-600 mt-2">
                 Starts October 2026
               </p>
             </div>
-            <div className="p-3.5 bg-gold/10 text-gold border border-gold/20 rounded-2xl">
+            <div className="p-3.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-2xl">
               <Calendar size={28} />
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden glow-card">
+        <div className="bg-white border-2 border-slate-200 rounded-3xl p-6 shadow-md hover:shadow-lg transition-all glow-card">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Pre-Lift Monthly</p>
-              <p className="text-3xl md:text-4xl font-black text-emerald-400 mt-1">₹23,000</p>
-              <p className="text-xs font-semibold text-gray-400 mt-2">
+              <p className="text-xs font-black text-slate-500 uppercase tracking-wider">Pre-Lift Monthly</p>
+              <p className="text-3xl md:text-4xl font-black text-emerald-700 mt-1">₹23,000</p>
+              <p className="text-xs font-bold text-slate-600 mt-2">
                 Post-Lift: ₹25,000
               </p>
             </div>
-            <div className="p-3.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-2xl">
+            <div className="p-3.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-2xl">
               <IndianRupee size={28} />
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden glow-card">
+        <div className="bg-white border-2 border-slate-200 rounded-3xl p-6 shadow-md hover:shadow-lg transition-all glow-card">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Members Yet To Lift</p>
-              <p className="text-3xl md:text-4xl font-black text-white mt-1">
-                {data.notYetLifted} <span className="text-lg font-normal text-gray-400">/ 15</span>
+              <p className="text-xs font-black text-slate-500 uppercase tracking-wider">Members Yet To Lift</p>
+              <p className="text-3xl md:text-4xl font-black text-slate-900 mt-1">
+                {data.notYetLifted} <span className="text-lg font-bold text-slate-500">/ 15</span>
               </p>
-              <p className="text-xs font-semibold text-amber-400 mt-2 flex items-center gap-1">
+              <p className="text-xs font-black text-amber-700 mt-2 flex items-center gap-1">
                 <Clock size={14} /> Ready for Month 1 Lift
               </p>
             </div>
-            <div className="p-3.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-2xl">
+            <div className="p-3.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-2xl">
               <Sparkles size={28} />
             </div>
           </div>
@@ -169,10 +169,10 @@ export default function Dashboard() {
       {/* Quick Action Tiles — Large, Beautiful, Easy to Touch for Mom */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl md:text-2xl font-black text-white tracking-tight flex items-center gap-2">
+          <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <span>What would you like to do?</span>
           </h3>
-          <span className="text-xs font-semibold text-gray-400">Tap any button to open</span>
+          <span className="text-xs font-bold text-slate-600">Tap any button to open</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

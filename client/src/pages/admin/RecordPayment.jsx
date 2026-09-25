@@ -4,6 +4,7 @@ import api from '../../services/api';
 import confetti from 'canvas-confetti';
 import { formatCurrency } from '../../utils/currency';
 import StatusBadge from '../../components/StatusBadge';
+import { CheckCircle2, IndianRupee, User, Calendar, CreditCard, FileCheck, ArrowRight } from 'lucide-react';
 
 export default function RecordPayment() {
   const location = useLocation();
@@ -87,6 +88,7 @@ export default function RecordPayment() {
           colors: ['#10B981', '#d4a843', '#1e3a5f', '#F59E0B']
         });
       } catch (_) {}
+    } catch (err) {
       console.error(err);
       alert(err.response?.data?.error || 'Failed to record payment');
     } finally {
@@ -105,12 +107,11 @@ export default function RecordPayment() {
     return (
       <div className="max-w-2xl mx-auto space-y-6 animate-dramatic">
         <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border-4 border-gold relative overflow-hidden glow-card">
-          <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-28 h-28 bg-gradient-to-br from-gold to-amber-500 rounded-full opacity-20 blur-xl pointer-events-none"></div>
           <div className="text-center mb-6">
-            <span className="inline-block px-4 py-1 bg-green-100 text-green-800 rounded-full font-black text-sm tracking-wider uppercase mb-2">
+            <span className="inline-block px-4 py-1.5 bg-green-100 text-green-900 rounded-full font-black text-sm tracking-wider uppercase mb-2">
               ✅ Payment Successfully Confirmed
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-navy shimmer-text">MANI'S CHIT FUND</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-navy">MANI'S CHIT FUND</h2>
             <p className="text-gold font-bold text-lg">OFFICIAL PAYMENT RECEIPT</p>
           </div>
           
@@ -118,34 +119,34 @@ export default function RecordPayment() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-gray-500 font-bold text-sm">Member</p>
-                <p className="text-lg font-bold text-navy">{member?.name}</p>
+                <p className="text-xl font-bold text-navy">{member?.name}</p>
               </div>
               <div>
                 <p className="text-gray-500 font-bold text-sm">Member ID</p>
-                <p className="text-lg font-bold">{member?.member_code}</p>
+                <p className="text-xl font-bold text-gray-900">{member?.member_code}</p>
               </div>
               <div>
                 <p className="text-gray-500 font-bold text-sm">Month</p>
-                <p className="text-lg font-bold">{payment?.month_label}</p>
+                <p className="text-lg font-bold text-gray-900">{payment?.month_label}</p>
               </div>
               <div>
                 <p className="text-gray-500 font-bold text-sm">Receipt Number</p>
-                <p className="text-lg font-bold text-gold">{receipt.receipt_number}</p>
+                <p className="text-xl font-black text-gold">{receipt.receipt_number}</p>
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-2 gap-4 mt-4">
+            <div className="bg-gray-50 rounded-2xl p-5 grid grid-cols-2 gap-4 mt-4 border border-gray-200">
               <div>
                 <p className="text-gray-500 font-bold text-sm">Amount Due</p>
-                <p className="text-xl font-bold">{formatCurrency(payment?.amount_due)}</p>
+                <p className="text-2xl font-black text-gray-900">{formatCurrency(payment?.amount_due)}</p>
               </div>
               <div>
                 <p className="text-gray-500 font-bold text-sm">Amount Paid</p>
-                <p className="text-xl font-bold text-green-600">{formatCurrency(payment?.amount_paid)}</p>
+                <p className="text-2xl font-black text-green-600">{formatCurrency(payment?.amount_paid)}</p>
               </div>
               <div>
                 <p className="text-gray-500 font-bold text-sm">Remaining</p>
-                <p className="text-xl font-bold text-red-600">{formatCurrency(payment?.remaining_amount)}</p>
+                <p className="text-2xl font-black text-red-600">{formatCurrency(payment?.remaining_amount)}</p>
               </div>
               <div>
                 <p className="text-gray-500 font-bold text-sm">Status</p>
@@ -153,11 +154,11 @@ export default function RecordPayment() {
               </div>
               <div>
                 <p className="text-gray-500 font-bold text-sm">Payment Date</p>
-                <p className="text-lg font-bold">{payment?.payment_date || '—'}</p>
+                <p className="text-base font-bold text-gray-800">{payment?.payment_date || '—'}</p>
               </div>
               <div>
                 <p className="text-gray-500 font-bold text-sm">Method</p>
-                <p className="text-lg font-bold capitalize">{payment?.payment_method?.replace('_', ' ') || '—'}</p>
+                <p className="text-base font-bold text-gray-800 capitalize">{payment?.payment_method?.replace('_', ' ') || '—'}</p>
               </div>
             </div>
           </div>
@@ -171,13 +172,13 @@ export default function RecordPayment() {
                 setTransactionRef('');
                 setCurrentPayment(null);
               }}
-              className="flex-1 py-3 bg-navy text-gold font-bold rounded-lg text-lg hover:bg-navy-dark"
+              className="flex-1 py-4 bg-navy text-gold font-black rounded-xl text-lg hover:bg-navy-dark shadow-md"
             >
-              RECORD ANOTHER
+              RECORD ANOTHER PAYMENT
             </button>
             <button
               onClick={() => navigate('/admin/collection')}
-              className="flex-1 py-3 bg-gray-200 text-navy font-bold rounded-lg text-lg hover:bg-gray-300"
+              className="flex-1 py-4 bg-gray-200 text-navy font-bold rounded-xl text-lg hover:bg-gray-300"
             >
               VIEW COLLECTION
             </button>
@@ -189,134 +190,170 @@ export default function RecordPayment() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <h2 className="text-2xl md:text-3xl font-bold text-navy">Record Payment</h2>
+      <div>
+        <h2 className="text-3xl font-black text-slate-900 tracking-tight">Record Member Payment</h2>
+        <p className="text-slate-600 font-semibold mt-1">Select a member and month to record their chit payment</p>
+      </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
+      <div className="bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-slate-200">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
-              <label className="block text-lg font-bold text-gray-700 mb-2">Select Member *</label>
+          <div className="space-y-6">
+            {/* Member Selector */}
+            <div>
+              <label className="block text-base font-black text-slate-900 mb-2 flex items-center gap-2">
+                <User size={18} className="text-navy" />
+                Select Member *
+              </label>
               <select
                 required
                 value={selectedMemberId}
                 onChange={(e) => setSelectedMemberId(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg font-medium"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-lg font-bold shadow-sm"
               >
-                <option value="">-- Select a Member --</option>
+                <option value="">-- Choose Member --</option>
                 {members.map(m => (
-                  <option key={m.id} value={m.id}>{m.name} ({m.member_code})</option>
+                  <option key={m.id} value={m.id} className="text-slate-900 py-1">
+                    {m.name} ({m.member_code})
+                  </option>
                 ))}
               </select>
             </div>
 
-            <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Month *</label>
-              <select
-                required
-                value={selectedMonthId}
-                onChange={(e) => setSelectedMonthId(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg font-medium"
-              >
-                <option value="">-- Select Month --</option>
-                {months.map(m => (
-                  <option key={m.id} value={m.id}>{m.month_label} — {m.calendar_month}</option>
-                ))}
-              </select>
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Month Selector */}
+              <div>
+                <label className="block text-base font-black text-slate-900 mb-2 flex items-center gap-2">
+                  <Calendar size={18} className="text-navy" />
+                  Select Month *
+                </label>
+                <select
+                  required
+                  value={selectedMonthId}
+                  onChange={(e) => setSelectedMonthId(e.target.value)}
+                  className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
+                >
+                  <option value="">-- Select Month --</option>
+                  {months.map(m => (
+                    <option key={m.id} value={m.id} className="text-slate-900 py-1">
+                      {m.month_label} — {m.calendar_month}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Payment Date *</label>
-              <input
-                type="date"
-                required
-                value={paymentDate}
-                onChange={(e) => setPaymentDate(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
-              />
+              {/* Date */}
+              <div>
+                <label className="block text-base font-black text-slate-900 mb-2 flex items-center gap-2">
+                  <Calendar size={18} className="text-navy" />
+                  Payment Date *
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={paymentDate}
+                  onChange={(e) => setPaymentDate(e.target.value)}
+                  className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
+                />
+              </div>
             </div>
           </div>
 
+          {/* Member Monthly Due Summary Card */}
           {currentPayment && (
-            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 grid grid-cols-3 gap-4">
+            <div className="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200 grid grid-cols-3 gap-4">
               <div>
-                <p className="text-gray-500 font-bold text-sm mb-1">Amount Due</p>
-                <p className="text-xl font-bold text-navy">{formatCurrency(amountDue)}</p>
+                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Amount Due</p>
+                <p className="text-2xl font-black text-slate-900">{formatCurrency(amountDue)}</p>
               </div>
               <div>
-                <p className="text-gray-500 font-bold text-sm mb-1">Previously Paid</p>
-                <p className="text-xl font-bold text-green-600">{formatCurrency(previouslyPaid)}</p>
+                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Previously Paid</p>
+                <p className="text-2xl font-black text-emerald-600">{formatCurrency(previouslyPaid)}</p>
               </div>
               <div>
-                <p className="text-gray-500 font-bold text-sm mb-1">Current Status</p>
+                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Status</p>
                 <StatusBadge status={currentPayment.status} />
               </div>
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Amount and Remaining */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Amount Paying Now (₹) *</label>
+              <label className="block text-base font-black text-slate-900 mb-2 flex items-center gap-2">
+                <IndianRupee size={18} className="text-emerald-600" />
+                Amount Paying Now (₹) *
+              </label>
               <input
                 type="number"
                 required
                 min="1"
+                placeholder="e.g. 23000"
                 value={amountPaid}
                 onChange={(e) => setAmountPaid(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border-2 border-navy focus:ring-navy focus:border-navy text-xl font-bold"
+                className="w-full px-5 py-4 rounded-xl border-2 border-navy bg-white text-slate-950 focus:border-navy focus:ring-4 focus:ring-navy/10 text-2xl font-black shadow-sm"
               />
             </div>
 
-            <div className="flex flex-col justify-end pb-1">
-              <p className="text-gray-500 font-bold text-sm mb-1">Remaining After Payment</p>
-              <p className={`text-2xl font-black ${remainingAfterPayment > 0 ? 'text-red-600' : 'text-green-600'}`}>
+            <div className="flex flex-col justify-center bg-slate-50 p-4 rounded-2xl border border-slate-200">
+              <p className="text-slate-600 font-bold text-xs uppercase tracking-wider">Remaining Balance After Payment</p>
+              <p className={`text-3xl font-black mt-1 ${remainingAfterPayment > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
                 {formatCurrency(remainingAfterPayment)}
               </p>
             </div>
 
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Payment Method</label>
+              <label className="block text-base font-black text-slate-900 mb-2 flex items-center gap-2">
+                <CreditCard size={18} className="text-navy" />
+                Payment Method
+              </label>
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
               >
-                <option value="cash">Cash</option>
-                <option value="upi">UPI / GPay / PhonePe</option>
-                <option value="bank_transfer">Bank Transfer</option>
-                <option value="other">Other</option>
+                <option value="cash" className="text-slate-900">💵 Cash</option>
+                <option value="upi" className="text-slate-900">📱 UPI / GPay / PhonePe</option>
+                <option value="bank_transfer" className="text-slate-900">🏦 Bank Transfer (NEFT/IMPS)</option>
+                <option value="other" className="text-slate-900">📝 Other</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-lg font-bold text-gray-700 mb-2">Transaction Ref (Optional)</label>
+              <label className="block text-base font-black text-slate-900 mb-2">
+                Transaction Reference (Optional)
+              </label>
               <input
                 type="text"
                 value={transactionRef}
                 onChange={(e) => setTransactionRef(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
-                placeholder="UPI ID, Cheque No, etc."
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-bold shadow-sm"
+                placeholder="e.g. UPI Ref / GPay Transaction ID"
               />
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-lg font-bold text-gray-700 mb-2">Notes</label>
+              <label className="block text-base font-black text-slate-900 mb-2">
+                Notes / Remarks (Optional)
+              </label>
               <input
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
-                placeholder="Any additional notes..."
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 focus:border-navy focus:ring-2 focus:ring-navy/20 text-base font-medium shadow-sm"
+                placeholder="Any special remarks..."
               />
             </div>
           </div>
 
-          <div className="pt-6 border-t border-gray-200 mt-8">
+          {/* Big Confirm Button */}
+          <div className="pt-4 border-t border-slate-200">
             <button
               type="submit"
               disabled={loading || !selectedMemberId || !selectedMonthId || !amountPaid}
-              className="w-full py-4 bg-navy text-gold font-bold rounded-lg text-xl hover:bg-navy-dark shadow-lg disabled:opacity-50"
+              className="w-full py-5 rounded-2xl bg-gradient-to-r from-navy via-navy to-slate-900 hover:from-slate-900 hover:to-navy text-gold font-black text-xl shadow-xl transition-all disabled:opacity-40 flex items-center justify-center gap-2 border-2 border-gold/40"
             >
-              {loading ? 'SAVING...' : 'SAVE PAYMENT'}
+              <span>{loading ? 'RECORDING PAYMENT...' : 'CONFIRM & SAVE PAYMENT'}</span>
+              <ArrowRight size={22} />
             </button>
           </div>
         </form>

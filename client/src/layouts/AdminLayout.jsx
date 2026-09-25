@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, Menu, Sparkles, Heart } from 'lucide-react';
+import { LogOut, Menu, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
 export default function AdminLayout() {
@@ -9,8 +9,8 @@ export default function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-900 flex text-slate-900 antialiased selection:bg-gold selection:text-slate-900">
-      {/* Desktop Sidebar with Glass Polish */}
+    <div className="min-h-screen bg-slate-100 flex text-slate-900 antialiased selection:bg-gold selection:text-slate-900">
+      {/* Desktop Sidebar */}
       <div className="hidden md:flex w-72 flex-col fixed inset-y-0 z-50">
         <Sidebar onClose={() => {}} />
       </div>
@@ -18,7 +18,7 @@ export default function AdminLayout() {
       {/* Mobile Sidebar overlay */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex animate-fadeIn">
-          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" onClick={() => setMobileMenuOpen(false)}></div>
+          <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity" onClick={() => setMobileMenuOpen(false)}></div>
           <div className="relative flex-1 flex flex-col max-w-xs w-full bg-slate-900 shadow-2xl border-r border-slate-800">
             <Sidebar onClose={() => setMobileMenuOpen(false)} />
           </div>
@@ -28,7 +28,7 @@ export default function AdminLayout() {
       {/* Main content */}
       <div className="flex-1 md:ml-72 flex flex-col h-screen overflow-hidden">
         {/* Top Header */}
-        <header className="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 flex items-center justify-between px-4 py-3.5 md:px-8 z-40 shadow-sm">
+        <header className="bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 py-3.5 md:px-8 z-40 shadow-sm shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(true)}
@@ -52,7 +52,7 @@ export default function AdminLayout() {
           <div className="flex items-center gap-3">
             <button
               onClick={logout}
-              className="flex items-center text-xs md:text-sm font-bold text-gray-300 bg-slate-800/90 hover:bg-red-950/80 hover:text-red-300 border border-slate-700 hover:border-red-800/60 px-3.5 py-2 rounded-xl transition-all shadow-sm"
+              className="flex items-center text-xs md:text-sm font-bold text-gray-200 bg-slate-800 hover:bg-red-950 hover:text-red-300 border border-slate-700 hover:border-red-800 px-3.5 py-2 rounded-xl transition-all shadow-sm"
             >
               <LogOut size={16} className="mr-1.5 text-gold" />
               <span>Logout</span>
@@ -60,8 +60,8 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        {/* Inner Page Scroll Container */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-950 text-slate-100">
+        {/* Inner Page Scroll Container — Clear bright, high-contrast background */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-100 text-slate-900">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>

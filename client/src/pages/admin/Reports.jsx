@@ -82,11 +82,11 @@ export default function Reports() {
             </div>
 
             <div className="my-4">
-              <label className="block text-sm font-bold text-gray-700 mb-1">Select Month:</label>
+              <label className="block text-sm font-black text-slate-900 mb-1.5">Select Month:</label>
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg font-medium text-base focus:ring-navy focus:border-navy"
+                className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl font-bold text-base text-slate-900 bg-white shadow-sm focus:ring-2 focus:ring-navy"
               >
                 {months.map(m => (
                   <option key={m.id} value={m.id}>{m.month_label} — {m.calendar_month}</option>
@@ -127,11 +127,11 @@ export default function Reports() {
             </div>
 
             <div className="my-4">
-              <label className="block text-sm font-bold text-gray-700 mb-1">Select Member:</label>
+              <label className="block text-sm font-black text-slate-900 mb-1.5">Select Member:</label>
               <select
                 value={selectedMember}
                 onChange={(e) => setSelectedMember(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg font-medium text-base focus:ring-navy focus:border-navy"
+                className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl font-bold text-base text-slate-900 bg-white shadow-sm focus:ring-2 focus:ring-navy"
               >
                 {members.map(m => (
                   <option key={m.id} value={m.id}>{m.name} ({m.member_code})</option>

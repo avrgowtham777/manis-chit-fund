@@ -97,45 +97,45 @@ export default function MyProfile() {
 
         <form onSubmit={changePassword} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">Current Password</label>
+            <label className="block text-sm font-black text-slate-900 mb-1.5">Current Password</label>
             <input
               type="password"
               placeholder="Enter current password"
               required
               value={passData.oldPassword}
               onChange={(e) => setPassData({...passData, oldPassword: e.target.value})}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+              className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">New Password</label>
+            <label className="block text-sm font-black text-slate-900 mb-1.5">New Password</label>
             <input
               type="password"
               placeholder="Enter new password (min 6 characters)"
               required
               value={passData.newPassword}
               onChange={(e) => setPassData({...passData, newPassword: e.target.value})}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+              className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">Confirm New Password</label>
+            <label className="block text-sm font-black text-slate-900 mb-1.5">Confirm New Password</label>
             <input
               type="password"
               placeholder="Re-enter new password"
               required
               value={passData.confirmPassword}
               onChange={(e) => setPassData({...passData, confirmPassword: e.target.value})}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+              className="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:ring-2 focus:ring-navy focus:border-navy text-lg font-bold text-slate-900 bg-white shadow-sm transition-all"
             />
           </div>
 
           <button 
             type="submit" 
             disabled={changingPass}
-            className="w-full py-4 bg-navy text-gold font-bold rounded-xl text-lg hover:bg-navy-dark shadow disabled:opacity-50"
+            className="w-full py-4 bg-navy text-gold hover:bg-navy-dark font-black rounded-xl text-lg shadow-md disabled:opacity-50 transition-all"
           >
             {changingPass ? 'UPDATING...' : 'UPDATE PASSWORD'}
           </button>
@@ -144,7 +144,7 @@ export default function MyProfile() {
 
       <button 
         onClick={logout} 
-        className="w-full py-4 bg-red-50 text-red-700 hover:bg-red-100 font-bold rounded-xl text-lg border border-red-200 transition-colors"
+        className="w-full py-4 bg-red-100 text-red-800 hover:bg-red-200 font-black rounded-xl text-lg border-2 border-red-300 transition-all"
       >
         LOGOUT OF ACCOUNT
       </button>
