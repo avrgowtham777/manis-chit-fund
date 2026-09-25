@@ -1,0 +1,326 @@
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../../services/api';
+import confetti from 'canvas-confetti';
+import { formatCurrency } from '../../utils/currency';
+import StatusBadge from '../../components/StatusBadge';
+
+export default function RecordPayment() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [members, setMembers] = useState([]);
+  const [months, setMonths] = useState([]);
+  
+  const [selectedMemberId, setSelectedMemberId] = useState(location.state?.memberId || '');
+  const [selectedMonthId, setSelectedMonthId] = useState(location.state?.monthId || '');
+  const [amountPaid, setAmountPaid] = useState('');
+  const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
+  const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [transactionRef, setTransactionRef] = useState('');
+  const [notes, setNotes] = useState('');
+
+  const [currentPayment, setCurrentPayment] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [receipt, setReceipt] = useState(null);
+
+  useEffect(() => {
+    const fetchDropdowns = async () => {
+      try {
+        const [mRes, monthsRes] = await Promise.all([
+          api.get('/admin/members'),
+          api.get('/admin/settings/months')
+        ]);
+        setMembers(mRes.data.filter(m => m.status === 'active'));
+        setMonths(monthsRes.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDropdowns();
+  }, []);
+
+  // Fetch current payment status when member and month are selected
+  useEffect(() => {
+    const fetchPaymentStatus = async () => {
+      if (selectedMemberId && selectedMonthId) {
+        try {
+          const { data } = await api.get('/admin/payments', {
+            params: { memberId: selectedMemberId, monthId: selectedMonthId }
+          });
+          if (data.length > 0) {
+            const payment = data[0];
+            setCurrentPayment(payment);
+            const remaining = payment.amount_due - payment.amount_paid;
+            setAmountPaid(remaining > 0 ? remaining.toString() : '');
+          } else {
+            setCurrentPayment(null);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+    fetchPaymentStatus();
+  }, [selectedMemberId, selectedMonthId]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setReceipt(null);
+    try {
+      const { data } = await api.post('/admin/payments', {
+        memberId: Number(selectedMemberId),
+        monthId: Number(selectedMonthId),
+        amountPaid: Number(amountPaid),
+        paymentDate,
+        paymentMethod,
+        transactionReference: transactionRef,
+        notes
+      });
+      setReceipt(data);
+      // DRAMATIC CONFETTI EXPLOSION!
+      try {
+        confetti({
+          particleCount: 100,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ['#10B981', '#d4a843', '#1e3a5f', '#F59E0B']
+        });
+      } catch (_) {}
+      console.error(err);
+      alert(err.response?.data?.error || 'Failed to record payment');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const amountDue = currentPayment?.amount_due || 0;
+  const previouslyPaid = currentPayment?.amount_paid || 0;
+  const remainingAfterPayment = Math.max(0, amountDue - previouslyPaid - Number(amountPaid || 0));
+
+  // Receipt view after successful payment
+  if (receipt) {
+    const payment = receipt.payment;
+    const member = receipt.member;
+    return (
+      <div className="max-w-2xl mx-auto space-y-6 animate-dramatic">
+        <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border-4 border-gold relative overflow-hidden glow-card">
+          <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-28 h-28 bg-gradient-to-br from-gold to-amber-500 rounded-full opacity-20 blur-xl pointer-events-none"></div>
+          <div className="text-center mb-6">
+            <span className="inline-block px-4 py-1 bg-green-100 text-green-800 rounded-full font-black text-sm tracking-wider uppercase mb-2">
+              ✅ Payment Successfully Confirmed
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-navy shimmer-text">MANI'S CHIT FUND</h2>
+            <p className="text-gold font-bold text-lg">OFFICIAL PAYMENT RECEIPT</p>
+          </div>
+          
+          <div className="border-t-2 border-dashed border-gray-300 pt-4 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-gray-500 font-bold text-sm">Member</p>
+                <p className="text-lg font-bold text-navy">{member?.name}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 font-bold text-sm">Member ID</p>
+                <p className="text-lg font-bold">{member?.member_code}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 font-bold text-sm">Month</p>
+                <p className="text-lg font-bold">{payment?.month_label}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 font-bold text-sm">Receipt Number</p>
+                <p className="text-lg font-bold text-gold">{receipt.receipt_number}</p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-2 gap-4 mt-4">
+              <div>
+                <p className="text-gray-500 font-bold text-sm">Amount Due</p>
+                <p className="text-xl font-bold">{formatCurrency(payment?.amount_due)}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 font-bold text-sm">Amount Paid</p>
+                <p className="text-xl font-bold text-green-600">{formatCurrency(payment?.amount_paid)}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 font-bold text-sm">Remaining</p>
+                <p className="text-xl font-bold text-red-600">{formatCurrency(payment?.remaining_amount)}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 font-bold text-sm">Status</p>
+                <StatusBadge status={payment?.status} />
+              </div>
+              <div>
+                <p className="text-gray-500 font-bold text-sm">Payment Date</p>
+                <p className="text-lg font-bold">{payment?.payment_date || '—'}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 font-bold text-sm">Method</p>
+                <p className="text-lg font-bold capitalize">{payment?.payment_method?.replace('_', ' ') || '—'}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={() => {
+                setReceipt(null);
+                setAmountPaid('');
+                setNotes('');
+                setTransactionRef('');
+                setCurrentPayment(null);
+              }}
+              className="flex-1 py-3 bg-navy text-gold font-bold rounded-lg text-lg hover:bg-navy-dark"
+            >
+              RECORD ANOTHER
+            </button>
+            <button
+              onClick={() => navigate('/admin/collection')}
+              className="flex-1 py-3 bg-gray-200 text-navy font-bold rounded-lg text-lg hover:bg-gray-300"
+            >
+              VIEW COLLECTION
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-6">
+      <h2 className="text-2xl md:text-3xl font-bold text-navy">Record Payment</h2>
+
+      <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-2">
+              <label className="block text-lg font-bold text-gray-700 mb-2">Select Member *</label>
+              <select
+                required
+                value={selectedMemberId}
+                onChange={(e) => setSelectedMemberId(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg font-medium"
+              >
+                <option value="">-- Select a Member --</option>
+                {members.map(m => (
+                  <option key={m.id} value={m.id}>{m.name} ({m.member_code})</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-lg font-bold text-gray-700 mb-2">Month *</label>
+              <select
+                required
+                value={selectedMonthId}
+                onChange={(e) => setSelectedMonthId(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg font-medium"
+              >
+                <option value="">-- Select Month --</option>
+                {months.map(m => (
+                  <option key={m.id} value={m.id}>{m.month_label} — {m.calendar_month}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-lg font-bold text-gray-700 mb-2">Payment Date *</label>
+              <input
+                type="date"
+                required
+                value={paymentDate}
+                onChange={(e) => setPaymentDate(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+              />
+            </div>
+          </div>
+
+          {currentPayment && (
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 grid grid-cols-3 gap-4">
+              <div>
+                <p className="text-gray-500 font-bold text-sm mb-1">Amount Due</p>
+                <p className="text-xl font-bold text-navy">{formatCurrency(amountDue)}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 font-bold text-sm mb-1">Previously Paid</p>
+                <p className="text-xl font-bold text-green-600">{formatCurrency(previouslyPaid)}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 font-bold text-sm mb-1">Current Status</p>
+                <StatusBadge status={currentPayment.status} />
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-lg font-bold text-gray-700 mb-2">Amount Paying Now (₹) *</label>
+              <input
+                type="number"
+                required
+                min="1"
+                value={amountPaid}
+                onChange={(e) => setAmountPaid(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border-2 border-navy focus:ring-navy focus:border-navy text-xl font-bold"
+              />
+            </div>
+
+            <div className="flex flex-col justify-end pb-1">
+              <p className="text-gray-500 font-bold text-sm mb-1">Remaining After Payment</p>
+              <p className={`text-2xl font-black ${remainingAfterPayment > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                {formatCurrency(remainingAfterPayment)}
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-lg font-bold text-gray-700 mb-2">Payment Method</label>
+              <select
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+              >
+                <option value="cash">Cash</option>
+                <option value="upi">UPI / GPay / PhonePe</option>
+                <option value="bank_transfer">Bank Transfer</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-lg font-bold text-gray-700 mb-2">Transaction Ref (Optional)</label>
+              <input
+                type="text"
+                value={transactionRef}
+                onChange={(e) => setTransactionRef(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                placeholder="UPI ID, Cheque No, etc."
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-lg font-bold text-gray-700 mb-2">Notes</label>
+              <input
+                type="text"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-navy focus:border-navy text-lg"
+                placeholder="Any additional notes..."
+              />
+            </div>
+          </div>
+
+          <div className="pt-6 border-t border-gray-200 mt-8">
+            <button
+              type="submit"
+              disabled={loading || !selectedMemberId || !selectedMonthId || !amountPaid}
+              className="w-full py-4 bg-navy text-gold font-bold rounded-lg text-xl hover:bg-navy-dark shadow-lg disabled:opacity-50"
+            >
+              {loading ? 'SAVING...' : 'SAVE PAYMENT'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
