@@ -82,8 +82,8 @@ export default function Backup() {
               Use this when you are done testing and want to start fresh with real members:
             </p>
             <ul className="list-disc list-inside text-sm text-slate-300 space-y-1.5 font-semibold pt-1">
-              <li>Resets all 15 members to <span className="text-amber-400 font-bold">NOT LIFTED</span>.</li>
-              <li>Resets all 345 monthly payments back to <span className="text-amber-400 font-bold">₹23,000 PENDING</span> (₹0 paid).</li>
+              <li>Resets all member accounts to <span className="text-amber-400 font-bold">NOT LIFTED</span>.</li>
+              <li>Resets all monthly payments back to <span className="text-amber-400 font-bold">₹23,000 PENDING</span> (₹0 paid).</li>
               <li>Clears all test receipts and notifications.</li>
               <li>Restores default passwords (<code className="bg-slate-800 text-gold px-1.5 py-0.5 rounded border border-slate-700">Admin@123</code> & <code className="bg-slate-800 text-gold px-1.5 py-0.5 rounded border border-slate-700">Member@123</code>).</li>
               <li>Preserves Chit start date at <span className="text-gold font-bold">October 2026</span>.</li>
@@ -106,7 +106,7 @@ export default function Backup() {
       <ConfirmDialog
         isOpen={confirmOpen}
         title="⚠️ DANGER: Reset Entire Chit Fund?"
-        message="This will permanently delete all test payments, lift assignments, receipts, and notifications. All 15 member accounts will be reset to fresh starting status for October 2026. Do you want to proceed?"
+        message="This will permanently delete all test payments, lift assignments, receipts, and notifications. All member accounts will be reset to fresh starting status for October 2026. Do you want to proceed?"
         isWarn={true}
         onConfirm={handleReset}
         onCancel={() => setConfirmOpen(false)}

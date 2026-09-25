@@ -68,7 +68,7 @@ export default function Dashboard() {
     { to: '/admin/payments', label: 'RECORD PAYMENT', desc: 'One-click receipt & SMS alert', icon: IndianRupee, gradient: 'from-emerald-600 to-teal-700', textCol: 'text-white' },
     { to: '/admin/payments/pending', label: 'PENDING DUES', desc: 'Track overdue members', icon: FileClock, gradient: 'from-rose-600 to-red-700', textCol: 'text-white' },
     { to: '/admin/chit-lift', label: 'CHIT LIFTING', desc: 'Assign monthly winner', icon: FileText, gradient: 'from-indigo-600 to-blue-700', textCol: 'text-white' },
-    { to: '/admin/members', label: 'ALL MEMBERS', desc: 'View 15 member profiles', icon: Users, gradient: 'from-purple-600 to-indigo-700', textCol: 'text-white' },
+    { to: '/admin/members', label: 'ALL MEMBERS', desc: `View all ${data.totalMembers} member profiles`, icon: Users, gradient: 'from-purple-600 to-indigo-700', textCol: 'text-white' },
     { to: '/admin/reports', label: 'DOWNLOAD REPORTS', desc: 'Official PDFs & Excel lists', icon: TrendingUp, gradient: 'from-blue-600 to-cyan-700', textCol: 'text-white' },
   ];
 
@@ -115,7 +115,7 @@ export default function Dashboard() {
               Welcome, <span className="shimmer-text">Organiser</span> 👑
             </h2>
             <p className="text-slate-300 font-medium text-base md:text-lg max-w-2xl leading-relaxed">
-              Real-time digital ledger for all 15 members. All monthly dues, pre/post lift calculations, and official receipts are computed automatically.
+              Real-time digital ledger for all {data.totalMembers} members. All monthly dues, pre/post lift calculations, and official receipts are computed automatically.
             </p>
           </div>
 
@@ -149,7 +149,7 @@ export default function Dashboard() {
               <p className="text-4xl sm:text-5xl font-black text-white mt-1 tracking-tight">{data.totalMembers}</p>
               <div className="mt-3">
                 <span className="text-xs font-black text-emerald-300 bg-emerald-950/70 border border-emerald-800 px-3 py-1 rounded-xl inline-flex items-center gap-1.5 shadow-sm">
-                  <CheckCircle2 size={13} className="text-emerald-400" /> All 15 Registered
+                  <CheckCircle2 size={13} className="text-emerald-400" /> All {data.totalMembers} Registered
                 </span>
               </div>
             </div>
@@ -204,7 +204,7 @@ export default function Dashboard() {
             <div>
               <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Members Yet To Lift</p>
               <p className="text-4xl sm:text-5xl font-black text-amber-300 mt-1 tracking-tight">
-                {data.notYetLifted} <span className="text-xl font-normal text-slate-400">/ 15</span>
+                {data.notYetLifted} <span className="text-xl font-normal text-slate-400">/ {data.totalMembers}</span>
               </p>
               <div className="mt-3">
                 <span className="text-xs font-black text-amber-300 bg-amber-950/70 border border-amber-800 px-3 py-1 rounded-xl inline-flex items-center gap-1.5 shadow-sm">
