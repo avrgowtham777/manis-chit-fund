@@ -5,8 +5,25 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const { getDb } = require('../../db/database');
 const { logAudit } = require('../../services/auditLogger');
+const { getSyncStatus, performCloudUpload } = require('../../services/cloudSync');
 
 const dbPath = path.join(__dirname, '../../db/chitfund.db');
+
+// Cloud Persistence Status
+router.get('/cloud-status', (req, res) => {
+    res.json(getSyncStatus());
+});
+
+// Trigger Manual Cloud Sync
+router.post('/cloud-sync', async (req, res) => {
+    try {
+        const db = getDb();
+        await performCloudUpload(db.getDbBuffer());
+        res.json({ success: true, status: getSyncStatus(), message: 'Cloud database synchronized successfully!' });
+    } catch (err) {
+        res.status(500).json({ error: 'Manual cloud sync failed: ' + err.message });
+    }
+});
 
 // Download database file
 router.get('/download', (req, res) => {

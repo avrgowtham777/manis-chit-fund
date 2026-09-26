@@ -1,11 +1,42 @@
-import { useState } from 'react';
-import { Download, RotateCcw, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Download, RotateCcw, AlertTriangle, Cloud, RefreshCw, CheckCircle2, ShieldCheck } from 'lucide-react';
 import api from '../../services/api';
 import ConfirmDialog from '../../components/ConfirmDialog';
 
 export default function Backup() {
   const [resetting, setResetting] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [cloudStatus, setCloudStatus] = useState(null);
+  const [syncingCloud, setSyncingCloud] = useState(false);
+  const [syncMsg, setSyncMsg] = useState('');
+
+  const fetchCloudStatus = async () => {
+    try {
+      const { data } = await api.get('/admin/backup/cloud-status');
+      setCloudStatus(data);
+    } catch (e) {
+      console.error('Failed to get cloud sync status', e);
+    }
+  };
+
+  useEffect(() => {
+    fetchCloudStatus();
+  }, []);
+
+  const handleManualSync = async () => {
+    setSyncingCloud(true);
+    setSyncMsg('');
+    try {
+      const { data } = await api.post('/admin/backup/cloud-sync');
+      setCloudStatus(data.status);
+      setSyncMsg('✅ Synced to cloud successfully!');
+      setTimeout(() => setSyncMsg(''), 4000);
+    } catch (err) {
+      setSyncMsg('❌ ' + (err.response?.data?.error || 'Sync failed'));
+    } finally {
+      setSyncingCloud(false);
+    }
+  };
 
   const handleBackup = async () => {
     try {
@@ -46,6 +77,84 @@ export default function Backup() {
         <p className="text-slate-300 font-medium mt-1">Download database backups or reset all transactions back to starting point</p>
       </div>
       
+      {/* Cloud Persistence Card */}
+      <div className={`cyber-card rounded-3xl p-6 md:p-8 border shadow-2xl transition-all ${
+        cloudStatus?.enabled 
+          ? 'border-emerald-500/40 bg-gradient-to-br from-emerald-950/20 via-slate-900/60 to-slate-900/80' 
+          : 'border-amber-500/40 bg-gradient-to-br from-amber-950/20 via-slate-900/60 to-slate-900/80'
+      }`}>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className={`p-2.5 rounded-2xl border ${
+                cloudStatus?.enabled ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-amber-500/20 border-amber-500/40 text-amber-400'
+              }`}>
+                <Cloud size={28} />
+              </div>
+              <div>
+                <h3 className="text-2xl font-black text-white flex items-center gap-2">
+                  <span>Cloud Persistence & Auto-Sync</span>
+                  <span className="text-gold text-lg">✦</span>
+                </h3>
+                <div className="flex items-center gap-2 mt-1">
+                  {cloudStatus?.enabled ? (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                      Active & Protected
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                      <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                      Local Mode (Ephemeral)
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <p className="text-slate-300 text-base max-w-2xl leading-relaxed">
+              {cloudStatus?.enabled ? (
+                <>
+                  Every time you add a member, collect a payment, or assign a chit lift, your data is <strong className="text-emerald-300">automatically synchronized to private cloud storage</strong>. Your mother's records will never be lost when Render sleeps!
+                </>
+              ) : (
+                <>
+                  Render Free Web Services spin down after 15 minutes of inactivity and reset their temporary disk. To make your data permanent forever, set <code className="bg-slate-800 text-amber-300 px-2 py-0.5 rounded border border-slate-700">GITHUB_TOKEN</code> in your Render Environment Variables.
+                </>
+              )}
+            </p>
+
+            {cloudStatus?.enabled && (
+              <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-400 pt-1">
+                <span className="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700 flex items-center gap-1.5">
+                  <ShieldCheck size={14} className="text-emerald-400" />
+                  Last Synced: <strong className="text-slate-200">{cloudStatus.lastSyncedAt ? new Date(cloudStatus.lastSyncedAt).toLocaleString('en-IN') : 'On next write'}</strong>
+                </span>
+                {cloudStatus.gistId && (
+                  <span className="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
+                    Storage ID: <strong className="text-slate-200">{cloudStatus.gistId.slice(0, 10)}...</strong>
+                  </span>
+                )}
+                {syncMsg && (
+                  <span className="text-sm font-bold text-emerald-400 animate-fade-in">{syncMsg}</span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {cloudStatus?.enabled && (
+            <button
+              onClick={handleManualSync}
+              disabled={syncingCloud}
+              className="px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black text-sm shadow-xl tracking-wider uppercase shrink-0 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              <RefreshCw size={18} className={syncingCloud ? 'animate-spin' : ''} />
+              {syncingCloud ? 'Syncing...' : 'Sync Cloud Now'}
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Download Backup */}
       <div className="cyber-card rounded-3xl p-6 md:p-8 border border-slate-800 shadow-2xl">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">

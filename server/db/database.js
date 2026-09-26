@@ -1,6 +1,7 @@
 const initSqlJs = require('sql.js');
 const fs = require('fs');
 const path = require('path');
+const { restoreFromCloud, queueCloudSave, performCloudUpload } = require('../services/cloudSync');
 
 const dbPath = path.join(__dirname, 'chitfund.db');
 const schemaPath = path.join(__dirname, 'schema.sql');
@@ -94,6 +95,7 @@ class DatabaseWrapper {
             const data = this._db.export();
             const buffer = Buffer.from(data);
             fs.writeFileSync(dbPath, buffer);
+            queueCloudSave(() => this.getDbBuffer());
         } catch (e) {
             // Ignore save errors during transactions
         }
@@ -113,6 +115,7 @@ class DatabaseWrapper {
     restoreFromBuffer(buffer) {
         this._db = new sqlJs.Database(new Uint8Array(buffer));
         this._save();
+        performCloudUpload(Buffer.from(this._db.export())).catch(() => {});
     }
 }
 
@@ -132,8 +135,12 @@ async function initDatabase() {
 
     sqlJs = await initSqlJs();
 
-    let sqlJsDb;
-    if (fs.existsSync(dbPath)) {
+    // 1. Attempt to restore the latest database from GitHub Cloud Gist if configured
+    let sqlJsDb = null;
+    const cloudBuffer = await restoreFromCloud(dbPath);
+    if (cloudBuffer) {
+        sqlJsDb = new sqlJs.Database(new Uint8Array(cloudBuffer));
+    } else if (fs.existsSync(dbPath)) {
         const fileBuffer = fs.readFileSync(dbPath);
         sqlJsDb = new sqlJs.Database(new Uint8Array(fileBuffer));
     } else {
