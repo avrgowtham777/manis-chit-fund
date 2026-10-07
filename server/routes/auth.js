@@ -15,11 +15,29 @@ router.post('/login', async (req, res) => {
     const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
     
     if (!user || !user.active) {
+        logAudit(db, {
+            userId: null,
+            action: 'login_failed',
+            entityType: 'auth',
+            entityId: 0,
+            newValue: { username, status: 'Failed (Unknown or Inactive User)' },
+            reason: 'Invalid username or inactive account',
+            ipAddress: req.ip
+        });
         return res.status(401).json({ error: 'Invalid credentials or inactive account' });
     }
 
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) {
+        logAudit(db, {
+            userId: user.id,
+            action: 'login_failed',
+            entityType: 'auth',
+            entityId: user.id,
+            newValue: { username: user.username, role: user.role, status: 'Failed (Wrong Password)' },
+            reason: 'Incorrect password entered',
+            ipAddress: req.ip
+        });
         return res.status(401).json({ error: 'Invalid credentials' });
     }
 
@@ -34,9 +52,11 @@ router.post('/login', async (req, res) => {
 
     logAudit(db, {
         userId: user.id,
-        action: 'login',
+        action: 'login_success',
         entityType: 'auth',
         entityId: user.id,
+        newValue: { username: user.username, role: user.role, status: 'Login Successful' },
+        reason: 'Authenticated via password',
         ipAddress: req.ip
     });
 

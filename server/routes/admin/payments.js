@@ -124,22 +124,73 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-    const { amount_due, amount_paid, payment_date, payment_method, transaction_reference, status, notes, reason } = req.body;
-    if (!reason) return res.status(400).json({ error: 'Reason for edit required' });
+    const { amount_due, amount_paid, payment_date, payment_method, transaction_reference, notes, reason } = req.body;
+    if (!reason || !reason.trim()) {
+        return res.status(400).json({ error: 'A valid reason for editing this payment is required (e.g. Typo correction)' });
+    }
 
     const current = db.prepare('SELECT * FROM payments WHERE id=?').get(req.params.id);
-    if (!current) return res.status(404).json({ error: 'Not found' });
+    if (!current) return res.status(404).json({ error: 'Payment record not found' });
 
-    const remaining = amount_due - amount_paid;
+    const newDue = amount_due != null ? Number(amount_due) : current.amount_due;
+    const newPaid = amount_paid != null ? Number(amount_paid) : current.amount_paid;
+    const newRemaining = Math.max(0, newDue - newPaid);
+
+    let newStatus = 'pending';
+    if (newRemaining <= 0 && newPaid > 0) newStatus = 'paid';
+    else if (newPaid > 0) newStatus = 'partial';
+
+    let receiptNum = current.receipt_number;
+    if (newPaid > 0 && !receiptNum) {
+        const count = db.prepare('SELECT COUNT(*) as c FROM payments WHERE receipt_number IS NOT NULL').get().c;
+        receiptNum = `MCF-${String(count + 1).padStart(6, '0')}`;
+    }
 
     db.prepare(`
-        UPDATE payments SET amount_due=?, amount_paid=?, remaining_amount=?, payment_date=?, payment_method=?, transaction_reference=?, status=?, notes=?
+        UPDATE payments SET 
+            amount_due=?, 
+            amount_paid=?, 
+            remaining_amount=?, 
+            payment_date=?, 
+            payment_method=?, 
+            transaction_reference=?, 
+            receipt_number=?, 
+            status=?, 
+            notes=?, 
+            updated_at=CURRENT_TIMESTAMP
         WHERE id=?
-    `).run(amount_due, amount_paid, remaining, payment_date, payment_method, transaction_reference, status, notes, req.params.id);
+    `).run(
+        newDue, 
+        newPaid, 
+        newRemaining, 
+        payment_date || current.payment_date, 
+        payment_method || current.payment_method, 
+        transaction_reference !== undefined ? transaction_reference : current.transaction_reference, 
+        receiptNum, 
+        newStatus, 
+        notes !== undefined ? notes : current.notes, 
+        req.params.id
+    );
 
     logAudit(db, {
-        userId: req.user.id, action: 'edit_payment', entityType: 'payment', entityId: req.params.id,
-        oldValue: current, newValue: req.body, reason, ipAddress: req.ip
+        userId: req.user.id,
+        action: 'edit_payment',
+        entityType: 'payment',
+        entityId: req.params.id,
+        oldValue: { 
+            amount_due: current.amount_due, 
+            amount_paid: current.amount_paid, 
+            remaining: current.remaining_amount, 
+            status: current.status 
+        },
+        newValue: { 
+            amount_due: newDue, 
+            amount_paid: newPaid, 
+            remaining: newRemaining, 
+            status: newStatus 
+        },
+        reason: reason.trim(),
+        ipAddress: req.ip
     });
 
     const updated = db.prepare(`
@@ -150,7 +201,11 @@ router.put('/:id', (req, res) => {
         WHERE p.id = ?
     `).get(req.params.id);
 
-    res.json({ success: true, payment: updated });
+    res.json({ 
+        success: true, 
+        message: 'Payment updated and audit trail recorded successfully!',
+        payment: updated 
+    });
 });
 
 module.exports = router;

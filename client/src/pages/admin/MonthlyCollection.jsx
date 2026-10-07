@@ -6,8 +6,9 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 import CurrencyDisplay from '../../components/CurrencyDisplay';
 import StatusBadge from '../../components/StatusBadge';
 import { formatCurrency } from '../../utils/currency';
-import { Sparkles, MessageSquare } from 'lucide-react';
+import { Sparkles, MessageSquare, Edit3 } from 'lucide-react';
 import { getPaymentWhatsAppShare, getReminderWhatsAppShare } from '../../utils/messaging';
+import EditPaymentModal from '../../components/EditPaymentModal';
 
 export default function MonthlyCollection() {
   const { monthId } = useParams();
@@ -16,6 +17,7 @@ export default function MonthlyCollection() {
   const [months, setMonths] = useState([]);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [editingPayment, setEditingPayment] = useState(null);
 
   useEffect(() => {
     const fetchMonths = async () => {
@@ -181,6 +183,18 @@ export default function MonthlyCollection() {
                         Record
                       </button>
                       <button
+                        onClick={() => setEditingPayment({
+                          ...p,
+                          month_label: currentMonthInfo?.month_label || `Month ${currentMonth}`,
+                          calendar_month: currentMonthInfo?.calendar_month || ''
+                        })}
+                        title="Edit or Correct Payment"
+                        className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-xl font-black text-xs uppercase tracking-wider border border-amber-500/30 flex items-center gap-1 transition-all"
+                      >
+                        <Edit3 size={12} />
+                        <span>Edit</span>
+                      </button>
+                      <button
                         onClick={() => handleWhatsAppAction(p)}
                         title={p.status === 'paid' ? 'Send WhatsApp Receipt' : 'Send WhatsApp Reminder'}
                         className={`px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1 shadow transition-all ${
@@ -200,6 +214,22 @@ export default function MonthlyCollection() {
           </table>
         </div>
       </div>
+
+      <EditPaymentModal
+        isOpen={Boolean(editingPayment)}
+        payment={editingPayment}
+        onClose={() => setEditingPayment(null)}
+        onSaved={() => {
+          // Refresh month collection data
+          const fetchAgain = async () => {
+            try {
+              const { data } = await api.get(`/admin/payments/month/${currentMonth}`);
+              setData(data);
+            } catch (e) {}
+          };
+          fetchAgain();
+        }}
+      />
     </div>
   );
 }

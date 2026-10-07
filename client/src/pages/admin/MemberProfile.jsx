@@ -7,6 +7,7 @@ import StatusBadge from '../../components/StatusBadge';
 import { User, Phone, IndianRupee, Calendar, Edit3, X, Save, MessageSquare } from 'lucide-react';
 import { formatCurrency } from '../../utils/currency';
 import { getPaymentWhatsAppShare, getReminderWhatsAppShare } from '../../utils/messaging';
+import EditPaymentModal from '../../components/EditPaymentModal';
 
 export default function MemberProfile() {
   const { id } = useParams();
@@ -21,6 +22,7 @@ export default function MemberProfile() {
   const [editPhone, setEditPhone] = useState('');
   const [editNotes, setEditNotes] = useState('');
   const [savingEdit, setSavingEdit] = useState(false);
+  const [editingPayment, setEditingPayment] = useState(null);
 
   useEffect(() => {
     fetchMemberData();
@@ -281,6 +283,21 @@ export default function MemberProfile() {
                         Record
                       </button>
                       <button
+                        onClick={() => setEditingPayment({
+                          ...p,
+                          member_name: member?.name,
+                          phone: member?.phone,
+                          member_code: member?.member_code,
+                          calendar_month: p.calendar_month,
+                          month_label: p.month_label
+                        })}
+                        title="Edit or Correct Payment"
+                        className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-xl font-black text-xs uppercase tracking-wider border border-amber-500/30 flex items-center gap-1 transition-all shadow"
+                      >
+                        <Edit3 size={12} />
+                        <span>Edit</span>
+                      </button>
+                      <button
                         onClick={() => handleSendWhatsApp(p)}
                         title={p.status === 'paid' ? 'Send WhatsApp Receipt' : 'Send WhatsApp Reminder'}
                         className={`px-3 py-1.5 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow ${
@@ -401,6 +418,13 @@ export default function MemberProfile() {
           </div>
         </div>
       )}
+      {/* Edit Payment Modal */}
+      <EditPaymentModal
+        isOpen={Boolean(editingPayment)}
+        payment={editingPayment}
+        onClose={() => setEditingPayment(null)}
+        onSaved={() => fetchMemberData()}
+      />
     </div>
   );
 }
