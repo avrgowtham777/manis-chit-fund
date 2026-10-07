@@ -4,7 +4,8 @@ import api from '../../services/api';
 import confetti from 'canvas-confetti';
 import { formatCurrency } from '../../utils/currency';
 import StatusBadge from '../../components/StatusBadge';
-import { CheckCircle2, IndianRupee, User, Calendar, CreditCard, FileCheck, ArrowRight, Sparkles } from 'lucide-react';
+import { CheckCircle2, IndianRupee, User, Calendar, CreditCard, FileCheck, ArrowRight, Sparkles, MessageSquare, Phone, Send } from 'lucide-react';
+import { getPaymentWhatsAppShare } from '../../utils/messaging';
 
 export default function RecordPayment() {
   const location = useLocation();
@@ -23,6 +24,8 @@ export default function RecordPayment() {
   const [currentPayment, setCurrentPayment] = useState(null);
   const [loading, setLoading] = useState(false);
   const [receipt, setReceipt] = useState(null);
+  const [tempPhone, setTempPhone] = useState('');
+  const [savingPhone, setSavingPhone] = useState(false);
 
   useEffect(() => {
     const fetchDropdowns = async () => {
@@ -96,6 +99,26 @@ export default function RecordPayment() {
     }
   };
 
+  const handleSavePhoneAndSend = async (memberId) => {
+    if (!tempPhone.trim()) return;
+    setSavingPhone(true);
+    try {
+      await api.put(`/admin/members/${memberId}`, {
+        phone: tempPhone.trim(),
+        name: receipt?.member?.name
+      });
+      setReceipt(prev => ({
+        ...prev,
+        member: { ...prev.member, phone: tempPhone.trim() }
+      }));
+      alert('Phone number saved successfully!');
+    } catch (e) {
+      alert('Failed to save phone number');
+    } finally {
+      setSavingPhone(false);
+    }
+  };
+
   const amountDue = currentPayment?.amount_due || 0;
   const previouslyPaid = currentPayment?.amount_paid || 0;
   const remainingAfterPayment = Math.max(0, amountDue - previouslyPaid - Number(amountPaid || 0));
@@ -104,6 +127,19 @@ export default function RecordPayment() {
   if (receipt) {
     const payment = receipt.payment;
     const member = receipt.member;
+    const shareInfo = getPaymentWhatsAppShare({
+      memberName: member?.name,
+      phone: member?.phone,
+      monthLabel: payment?.month_label,
+      calendarMonth: payment?.calendar_month,
+      amountDue: payment?.amount_due,
+      amountPaid: payment?.amount_paid,
+      remainingAmount: payment?.remaining_amount,
+      status: payment?.status,
+      receiptNumber: receipt.receipt_number,
+      paymentDate: payment?.payment_date
+    });
+
     return (
       <div className="max-w-2xl mx-auto space-y-6 animate-dramatic">
         <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border-4 border-gold relative overflow-hidden glow-card">
@@ -160,6 +196,71 @@ export default function RecordPayment() {
                 <p className="text-gray-500 font-bold text-sm">Method</p>
                 <p className="text-base font-bold text-gray-800 capitalize">{payment?.payment_method?.replace('_', ' ') || '—'}</p>
               </div>
+            </div>
+
+            {/* Instant WhatsApp & SMS Notification Card */}
+            <div className="bg-slate-900 rounded-2xl p-5 border-2 border-emerald-500/50 space-y-3 mt-4 text-left shadow-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2.5 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30">
+                    <MessageSquare size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-black text-white">Send Instant Phone Notification</h4>
+                    <p className="text-xs text-slate-300 font-medium">
+                      {shareInfo.hasPhone ? (
+                        <>Recipient: <strong className="text-emerald-300 font-mono">{member?.phone}</strong></>
+                      ) : (
+                        <span className="text-amber-400 font-semibold">⚠️ No phone number saved for {member?.name}</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {shareInfo.hasPhone ? (
+                <div className="flex flex-col sm:flex-row gap-3 pt-1">
+                  <a
+                    href={shareInfo.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all tracking-wider uppercase text-center"
+                  >
+                    <span>📲 SEND WHATSAPP RECEIPT</span>
+                  </a>
+                  {shareInfo.smsUrl && (
+                    <a
+                      href={shareInfo.smsUrl}
+                      className="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm rounded-xl flex items-center justify-center gap-2 border border-slate-700 transition-all uppercase tracking-wider text-center"
+                    >
+                      <span>💬 SEND SMS</span>
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-2 pt-1">
+                  <p className="text-xs text-slate-300">
+                    Add phone number now to send WhatsApp/SMS receipt with 1 tap:
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="tel"
+                      placeholder="Enter mobile (e.g. 9876543210)"
+                      value={tempPhone}
+                      onChange={(e) => setTempPhone(e.target.value)}
+                      className="flex-1 px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white font-bold text-sm focus:border-gold focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      disabled={savingPhone || !tempPhone}
+                      onClick={() => handleSavePhoneAndSend(member?.id || receipt.payment?.member_id)}
+                      className="px-4 py-2 bg-gold hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl uppercase tracking-wider disabled:opacity-50"
+                    >
+                      {savingPhone ? 'Saving...' : 'Save Phone'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -220,6 +321,31 @@ export default function RecordPayment() {
                   </option>
                 ))}
               </select>
+              {selectedMemberId && (() => {
+                const sel = members.find(m => String(m.id) === String(selectedMemberId));
+                return (
+                  <div className="mt-2.5 flex items-center justify-between text-xs bg-slate-900/90 px-4 py-2.5 rounded-xl border border-slate-800">
+                    <span className="flex items-center gap-2 font-bold text-slate-300">
+                      <Phone size={14} className="text-gold" />
+                      Phone for WhatsApp notifications: 
+                      {sel?.phone ? (
+                        <strong className="text-emerald-400 font-mono text-sm">{sel.phone}</strong>
+                      ) : (
+                        <span className="text-amber-400 font-bold">Not added yet</span>
+                      )}
+                    </span>
+                    {!sel?.phone && (
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/admin/members/${sel?.id}`)}
+                        className="text-gold hover:text-amber-300 underline font-bold cursor-pointer"
+                      >
+                        Add Phone Now &rarr;
+                      </button>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

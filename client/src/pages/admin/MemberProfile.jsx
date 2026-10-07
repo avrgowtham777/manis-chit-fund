@@ -4,8 +4,9 @@ import api from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import StatusBadge from '../../components/StatusBadge';
-import { User, Phone, IndianRupee, Calendar, Edit3, X, Save } from 'lucide-react';
+import { User, Phone, IndianRupee, Calendar, Edit3, X, Save, MessageSquare } from 'lucide-react';
 import { formatCurrency } from '../../utils/currency';
+import { getPaymentWhatsAppShare, getReminderWhatsAppShare } from '../../utils/messaging';
 
 export default function MemberProfile() {
   const { id } = useParams();
@@ -96,6 +97,44 @@ export default function MemberProfile() {
       alert(err.response?.data?.error || 'Failed to update member');
     } finally {
       setSavingEdit(false);
+    }
+  };
+
+  const handleSendWhatsApp = (p) => {
+    let phone = member?.phone;
+    if (!phone) {
+      phone = window.prompt(`Enter 10-digit mobile number for ${member.name} to send WhatsApp:`);
+      if (!phone || !phone.trim()) return;
+      api.put(`/admin/members/${member.id}`, {
+        phone: phone.trim(),
+        name: member.name
+      }).then(() => fetchMemberData()).catch(() => {});
+    }
+
+    if (p.status === 'paid') {
+      const share = getPaymentWhatsAppShare({
+        memberName: member.name,
+        phone,
+        monthLabel: p.month_label,
+        calendarMonth: p.calendar_month,
+        amountDue: p.amount_due,
+        amountPaid: p.amount_paid,
+        remainingAmount: p.remaining_amount,
+        status: p.status,
+        receiptNumber: p.receipt_number,
+        paymentDate: p.payment_date
+      });
+      window.open(share.whatsappUrl, '_blank');
+    } else {
+      const share = getReminderWhatsAppShare({
+        memberName: member.name,
+        phone,
+        monthLabel: p.month_label,
+        calendarMonth: p.calendar_month,
+        amountDue: p.amount_due,
+        remainingAmount: p.remaining_amount
+      });
+      window.open(share.whatsappUrl, '_blank');
     }
   };
 
@@ -234,12 +273,26 @@ export default function MemberProfile() {
                     <StatusBadge status={p.status} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <button
-                      onClick={() => navigate('/admin/payments', { state: { memberId: member.id, monthId: p.month_id } })}
-                      className="px-4 py-1.5 bg-slate-900 text-gold hover:bg-black hover:text-amber-300 rounded-xl font-black text-xs uppercase tracking-wider border border-gold/40 shadow"
-                    >
-                      Record
-                    </button>
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => navigate('/admin/payments', { state: { memberId: member.id, monthId: p.month_id } })}
+                        className="px-3.5 py-1.5 bg-slate-900 text-gold hover:bg-black hover:text-amber-300 rounded-xl font-black text-xs uppercase tracking-wider border border-gold/40 shadow"
+                      >
+                        Record
+                      </button>
+                      <button
+                        onClick={() => handleSendWhatsApp(p)}
+                        title={p.status === 'paid' ? 'Send WhatsApp Receipt' : 'Send WhatsApp Reminder'}
+                        className={`px-3 py-1.5 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow ${
+                          p.status === 'paid'
+                            ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                            : 'bg-emerald-700 hover:bg-emerald-600 text-white'
+                        }`}
+                      >
+                        <span>📲</span>
+                        <span>{p.status === 'paid' ? 'Receipt' : 'Remind'}</span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

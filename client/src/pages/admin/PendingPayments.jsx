@@ -4,11 +4,41 @@ import api from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import StatusBadge from '../../components/StatusBadge';
 import { formatCurrency } from '../../utils/currency';
+import { getReminderWhatsAppShare } from '../../utils/messaging';
 
 export default function PendingPayments() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const handleSendReminder = async (p) => {
+    let phone = p.phone;
+    if (!phone) {
+      const entered = window.prompt(`Enter 10-digit mobile number for ${p.member_name} to send WhatsApp reminder:`);
+      if (!entered || !entered.trim()) return;
+      try {
+        await api.put(`/admin/members/${p.member_id}`, {
+          phone: entered.trim(),
+          name: p.member_name
+        });
+        phone = entered.trim();
+        p.phone = phone;
+      } catch (err) {
+        alert('Failed to save phone number');
+        return;
+      }
+    }
+
+    const share = getReminderWhatsAppShare({
+      memberName: p.member_name,
+      phone,
+      monthLabel: p.month_label || `Month ${p.month_id}`,
+      calendarMonth: p.calendar_month || '',
+      amountDue: p.amount_due,
+      remainingAmount: p.remaining_amount
+    });
+    window.open(share.whatsappUrl, '_blank');
+  };
 
   useEffect(() => {
     const fetchPending = async () => {
@@ -79,12 +109,21 @@ export default function PendingPayments() {
                     <StatusBadge status={p.status} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <button
-                      onClick={() => navigate('/admin/payments', { state: { memberId: p.member_id, monthId: p.month_id } })}
-                      className="gold-glow-button px-4 py-2 text-slate-950 rounded-xl font-black text-xs shadow-md"
-                    >
-                      Record Payment
-                    </button>
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => navigate('/admin/payments', { state: { memberId: p.member_id, monthId: p.month_id } })}
+                        className="gold-glow-button px-3.5 py-1.5 text-slate-950 rounded-xl font-black text-xs shadow-md uppercase tracking-wider"
+                      >
+                        Record
+                      </button>
+                      <button
+                        onClick={() => handleSendReminder(p)}
+                        title="Send WhatsApp Payment Reminder"
+                        className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl font-black text-xs shadow transition-all flex items-center gap-1 uppercase tracking-wider"
+                      >
+                        <span>📲 Remind</span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

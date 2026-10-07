@@ -4,7 +4,8 @@ import ConfirmDialog from '../../components/ConfirmDialog';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import confetti from 'canvas-confetti';
 import { formatCurrency } from '../../utils/currency';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, MessageSquare } from 'lucide-react';
+import { getLiftWinnerWhatsAppShare } from '../../utils/messaging';
 
 export default function ChitLifting() {
   const [members, setMembers] = useState([]);
@@ -58,10 +59,25 @@ export default function ChitLifting() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.memberId || !formData.monthId) return;
-    setConfirmOpen(true);
+  const handleSendLiftAnnouncement = (l) => {
+    const member = members.find(m => m.id === l.member_id);
+    let phone = member?.phone;
+    if (!phone) {
+      phone = window.prompt(`Enter mobile number for ${l.member_name} to send WhatsApp announcement:`);
+      if (!phone || !phone.trim()) return;
+      api.put(`/admin/members/${l.member_id}`, {
+        phone: phone.trim(),
+        name: l.member_name
+      }).catch(() => {});
+    }
+    const share = getLiftWinnerWhatsAppShare({
+      memberName: l.member_name,
+      phone,
+      monthLabel: l.month_label,
+      calendarMonth: l.calendar_month,
+      receivableAmount: l.receivable_amount
+    });
+    window.open(share.whatsappUrl, '_blank');
   };
 
   const executeLift = async (force = false) => {
@@ -89,8 +105,23 @@ export default function ChitLifting() {
         fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
         fire(0.1, { spread: 120, startVelocity: 45 });
       } catch (_) {}
-      alert('🎉 CHIT LIFT CELEBRATION! Lifter has been officially assigned!');
+
+      const assignedMember = members.find(m => m.id === Number(formData.memberId));
+      const assignedMonth = months.find(m => m.id === Number(formData.monthId));
       fetchData();
+
+      if (assignedMember) {
+        const wantsToSend = window.confirm(`🎉 Lift officially assigned to ${assignedMember.name}!\n\nWould you like to send the congratulations announcement via WhatsApp right now?`);
+        if (wantsToSend) {
+          handleSendLiftAnnouncement({
+            member_id: assignedMember.id,
+            member_name: assignedMember.name,
+            month_label: assignedMonth?.month_label,
+            calendar_month: assignedMonth?.calendar_month,
+            receivable_amount: assignedMonth?.receivable_amount
+          });
+        }
+      }
     } catch (err) {
       console.error(err);
       if (err.response?.status === 409) {
@@ -255,12 +286,21 @@ export default function ChitLifting() {
                   <td className="px-6 py-4 whitespace-nowrap text-base text-gray-600">{l.lift_date || '—'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     {l.member_name ? (
-                      <button
-                        onClick={() => removeLift(l.month_id)}
-                        className="px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded font-bold text-sm"
-                      >
-                        Remove
-                      </button>
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => handleSendLiftAnnouncement(l)}
+                          title="Send WhatsApp Winner Announcement"
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow"
+                        >
+                          <span>🎉 WhatsApp</span>
+                        </button>
+                        <button
+                          onClick={() => removeLift(l.month_id)}
+                          className="px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-xl font-bold text-xs uppercase"
+                        >
+                          Remove
+                        </button>
+                      </div>
                     ) : (
                       <button
                         onClick={() => {

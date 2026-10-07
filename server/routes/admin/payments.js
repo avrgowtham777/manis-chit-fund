@@ -24,12 +24,25 @@ router.get('/', (req, res) => {
 });
 
 router.get('/pending', (req, res) => {
-    const payments = db.prepare('SELECT p.*, m.name as member_name, mo.calendar_month FROM payments p JOIN members m ON p.member_id = m.id JOIN months mo ON p.month_id = mo.id WHERE p.status IN ("pending", "partial")').all();
+    const payments = db.prepare(`
+        SELECT p.*, m.name as member_name, m.member_code, m.phone, mo.month_label, mo.calendar_month 
+        FROM payments p 
+        JOIN members m ON p.member_id = m.id 
+        JOIN months mo ON p.month_id = mo.id 
+        WHERE p.status IN ("pending", "partial")
+        ORDER BY mo.month_number, m.name
+    `).all();
     res.json(payments);
 });
 
 router.get('/month/:monthId', (req, res) => {
-    const payments = db.prepare('SELECT p.*, m.name as member_name, m.member_code FROM payments p JOIN members m ON p.member_id = m.id WHERE p.month_id = ?').all(req.params.monthId);
+    const payments = db.prepare(`
+        SELECT p.*, m.name as member_name, m.member_code, m.phone 
+        FROM payments p 
+        JOIN members m ON p.member_id = m.id 
+        WHERE p.month_id = ?
+        ORDER BY m.member_code
+    `).all(req.params.monthId);
     let expected = 0, collected = 0, pending = 0;
     payments.forEach(p => {
         expected += p.amount_due;
@@ -129,7 +142,15 @@ router.put('/:id', (req, res) => {
         oldValue: current, newValue: req.body, reason, ipAddress: req.ip
     });
 
-    res.json({ success: true });
+    const updated = db.prepare(`
+        SELECT p.*, m.name as member_name, m.member_code, m.phone, mo.month_label, mo.calendar_month
+        FROM payments p
+        JOIN members m ON p.member_id = m.id
+        JOIN months mo ON p.month_id = mo.id
+        WHERE p.id = ?
+    `).get(req.params.id);
+
+    res.json({ success: true, payment: updated });
 });
 
 module.exports = router;

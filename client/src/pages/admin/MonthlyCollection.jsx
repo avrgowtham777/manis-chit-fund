@@ -6,7 +6,8 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 import CurrencyDisplay from '../../components/CurrencyDisplay';
 import StatusBadge from '../../components/StatusBadge';
 import { formatCurrency } from '../../utils/currency';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, MessageSquare } from 'lucide-react';
+import { getPaymentWhatsAppShare, getReminderWhatsAppShare } from '../../utils/messaging';
 
 export default function MonthlyCollection() {
   const { monthId } = useParams();
@@ -43,6 +44,54 @@ export default function MonthlyCollection() {
     };
     fetchMonthData();
   }, [currentMonth]);
+
+  const handleWhatsAppAction = async (p) => {
+    let phone = p.phone;
+    if (!phone) {
+      const entered = window.prompt(`Enter 10-digit mobile number for ${p.member_name} to send WhatsApp:`);
+      if (!entered || !entered.trim()) return;
+      try {
+        await api.put(`/admin/members/${p.member_id}`, {
+          phone: entered.trim(),
+          name: p.member_name
+        });
+        phone = entered.trim();
+        p.phone = phone;
+      } catch (err) {
+        alert('Failed to save phone number');
+        return;
+      }
+    }
+
+    const currentMonthLabel = currentMonthInfo?.month_label || `Month ${currentMonth}`;
+    const currentCalendarMonth = currentMonthInfo?.calendar_month || '';
+
+    if (p.status === 'paid') {
+      const share = getPaymentWhatsAppShare({
+        memberName: p.member_name,
+        phone,
+        monthLabel: currentMonthLabel,
+        calendarMonth: currentCalendarMonth,
+        amountDue: p.amount_due,
+        amountPaid: p.amount_paid,
+        remainingAmount: p.remaining_amount,
+        status: p.status,
+        receiptNumber: p.receipt_number || 'N/A',
+        paymentDate: p.payment_date
+      });
+      window.open(share.whatsappUrl, '_blank');
+    } else {
+      const share = getReminderWhatsAppShare({
+        memberName: p.member_name,
+        phone,
+        monthLabel: currentMonthLabel,
+        calendarMonth: currentCalendarMonth,
+        amountDue: p.amount_due,
+        remainingAmount: p.remaining_amount
+      });
+      window.open(share.whatsappUrl, '_blank');
+    }
+  };
 
   if (loading && !data) return <LoadingSpinner />;
   if (!data) return <div className="p-6 text-red-500 font-bold">Failed to load data.</div>;
@@ -93,7 +142,7 @@ export default function MonthlyCollection() {
       <div className="cyber-card rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
         <div className="p-5 bg-slate-900/90 border-b border-slate-800 flex justify-between items-center">
           <h3 className="text-xl font-black text-white">Member Payments for Month {currentMonth}</h3>
-          <span className="text-xs text-gold font-bold">Click Record Payment to update ledger</span>
+          <span className="text-xs text-gold font-bold">Click Record Payment or WhatsApp to notify</span>
         </div>
 
         <div className="overflow-x-auto">
@@ -124,12 +173,26 @@ export default function MonthlyCollection() {
                     <StatusBadge status={p.status} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <button
-                      onClick={() => navigate('/admin/payments', { state: { memberId: p.member_id, monthId: currentMonth } })}
-                      className="gold-glow-button px-4 py-2 text-slate-950 rounded-xl font-black text-xs shadow-md"
-                    >
-                      Record Payment
-                    </button>
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => navigate('/admin/payments', { state: { memberId: p.member_id, monthId: currentMonth } })}
+                        className="gold-glow-button px-3.5 py-1.5 text-slate-950 rounded-xl font-black text-xs shadow-md uppercase tracking-wider"
+                      >
+                        Record
+                      </button>
+                      <button
+                        onClick={() => handleWhatsAppAction(p)}
+                        title={p.status === 'paid' ? 'Send WhatsApp Receipt' : 'Send WhatsApp Reminder'}
+                        className={`px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1 shadow transition-all ${
+                          p.status === 'paid'
+                            ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                            : 'bg-emerald-700 hover:bg-emerald-600 text-white'
+                        }`}
+                      >
+                        <span>📲</span>
+                        <span>{p.status === 'paid' ? 'Receipt' : 'Remind'}</span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
