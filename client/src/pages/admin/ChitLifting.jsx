@@ -59,6 +59,12 @@ export default function ChitLifting() {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.memberId || !formData.monthId) return;
+    setConfirmOpen(true);
+  };
+
   const handleSendLiftAnnouncement = (l) => {
     const member = members.find(m => m.id === l.member_id);
     let phone = member?.phone;
