@@ -5,7 +5,7 @@ import SearchBar from '../../components/SearchBar';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import EmptyState from '../../components/EmptyState';
 import StatusBadge from '../../components/StatusBadge';
-import { Users } from 'lucide-react';
+import { Users, Edit3, X, Save } from 'lucide-react';
 import { formatCurrency } from '../../utils/currency';
 
 export default function MembersList() {
@@ -13,7 +13,42 @@ export default function MembersList() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all'); // all, active, archived
+  const [editingMember, setEditingMember] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [editPhone, setEditPhone] = useState('');
+  const [editNotes, setEditNotes] = useState('');
+  const [savingEdit, setSavingEdit] = useState(false);
   const navigate = useNavigate();
+
+  const openQuickEdit = (member) => {
+    setEditingMember(member);
+    setEditName(member.name || '');
+    setEditPhone(member.phone || '');
+    setEditNotes(member.notes || '');
+  };
+
+  const handleSaveQuickEdit = async (e) => {
+    e.preventDefault();
+    if (!editName.trim()) {
+      alert('Member name cannot be empty');
+      return;
+    }
+    setSavingEdit(true);
+    try {
+      await api.put(`/admin/members/${editingMember.id}`, {
+        name: editName.trim(),
+        phone: editPhone.trim(),
+        notes: editNotes.trim(),
+        status: editingMember.status
+      });
+      setEditingMember(null);
+      await fetchMembers();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to update member');
+    } finally {
+      setSavingEdit(false);
+    }
+  };
 
   useEffect(() => {
     fetchMembers();
@@ -121,13 +156,107 @@ export default function MembersList() {
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 flex justify-end items-center">
+              <div className="mt-4 pt-3 flex justify-between items-center border-t border-slate-800">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openQuickEdit(member);
+                  }}
+                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-gold text-xs font-black rounded-xl border border-gold/40 flex items-center gap-1.5 uppercase transition-colors"
+                >
+                  <Edit3 size={13} /> Edit
+                </button>
                 <span className="text-gold font-black text-xs tracking-wider uppercase group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                  View Full Profile &rarr;
+                  View Profile &rarr;
                 </span>
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Quick Edit Modal */}
+      {editingMember && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+          <div className="cyber-card w-full max-w-lg rounded-3xl p-6 md:p-8 border border-gold/40 shadow-2xl relative">
+            <button
+              onClick={() => setEditingMember(null)}
+              className="absolute top-6 right-6 p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-gold/20 text-gold rounded-2xl border border-gold/30">
+                <Edit3 size={24} />
+              </div>
+              <div>
+                <h3 className="text-2xl font-black text-white">Edit Member Details</h3>
+                <p className="text-sm font-semibold text-slate-400 font-mono">{editingMember.member_code}</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSaveQuickEdit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-black text-slate-300 uppercase tracking-wider mb-1.5">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  placeholder="e.g. Siromani, Mani Mallika..."
+                  className="w-full px-4 py-3 bg-slate-900 border-2 border-slate-700 rounded-2xl text-white font-bold text-base focus:border-gold focus:outline-none transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-black text-slate-300 uppercase tracking-wider mb-1.5">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  value={editPhone}
+                  onChange={(e) => setEditPhone(e.target.value)}
+                  placeholder="e.g. 9876543210"
+                  className="w-full px-4 py-3 bg-slate-900 border-2 border-slate-700 rounded-2xl text-white font-bold text-base focus:border-gold focus:outline-none transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-black text-slate-300 uppercase tracking-wider mb-1.5">
+                  Notes / Details
+                </label>
+                <textarea
+                  rows="3"
+                  value={editNotes}
+                  onChange={(e) => setEditNotes(e.target.value)}
+                  placeholder="Optional notes, address, or relationship..."
+                  className="w-full px-4 py-3 bg-slate-900 border-2 border-slate-700 rounded-2xl text-white font-medium text-sm focus:border-gold focus:outline-none transition-colors resize-none"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setEditingMember(null)}
+                  className="flex-1 py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-2xl text-sm transition-colors uppercase tracking-wider"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingEdit}
+                  className="flex-1 gold-glow-button py-3 px-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 uppercase tracking-wider shadow-xl disabled:opacity-50"
+                >
+                  <Save size={16} />
+                  {savingEdit ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
